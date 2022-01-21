@@ -6,7 +6,7 @@ Calculate B1, fat-fraction, magnetisation transfer ratio or T2 maps
 ## Usage
 
 ```bash
-musclemap.py [general options] [algorithm] [algorithm options] [source files] 
+musclemap [general options] [algorithm] [algorithm options] [source files] 
 ```
 
 - `source files`: The image(s) containing the source data. The types of image 
@@ -77,7 +77,7 @@ the full image extent for that dimension) using `fslroi`
 - `-k`: save intermediate images     
 - `-v`: view map(s) in `fsleyes`
 - `-quiet`: don't display information messages or progress status
-- `--any-version`: don't abort if version checks fail
+- `--version`: display version and exit
 
 ### ff  algorithm
 - `-s`: separate images in x-direction during phase unwrapping. This is
@@ -89,70 +89,48 @@ recommended for lower limbs e.g. thighs or calves
 - `-b1pcf`: population level B1 correction factor. This is the gradient of a 
 straight line fit of B1 to MTR (default=0.0085)
 
-## Requirements
-__Software__
-- `git`
-- `python3`
-- `FSL` (version 6.0.3)
+## Software Requirements
 
-__Python libraries__
-- `argparse`
-- `nibabel` (version 2.5.1)
-- `numpy`
-- `os`
-- `pathlib`
-- `re`
-- `subprocess`
-- `sys`    
+- [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) (version 6.0.3)
 
-__Testing__ 
-- `pytest`
-- `unitest`
-
-## Updating Code
-
-1. Make a local copy of the repository
-   ```bash
-    cp -r /store/apps/musclemap your_directory
-   ```
-2. Make changes to the python code as required
-
-3. Update the necessary unit tests in `test_musclemap.py` and 
-the data stored in `test_data` directory
-
-4. Run the unit and integration tests and check they pass (-s shows stdout 
-during integration tests)
+## Installing
+1. Create a directory to store the package e.g.:
 
     ```bash
-    pytest-3 -v -s
+    mkdir musclemap
     ```
 
-5. Commit changes to git repository
+2. Create a new virtual environment in which to install `musclemap`:
 
     ```bash
-    git commit -a
+    python3 -m venv musclemap-env
     ```
-
-6. Tag the latest commit as a release
+   
+3. Activate the virtual environment:
 
     ```bash
-    git tag -a release-1.0.0 -m "release 1.0.0"
+    source musclemap-env/bin/activate
     ```
 
-7. Push the changes to the github repository
-    ```bash
-    git push -u origin master --follow-tags
-    ```
-
-8. Copy the modified directory back into `/store/apps`
+4. Upgrade `pip` and `build`:
 
     ```bash
-    sudo cp -r your_directory /store/apps/musclemap
+    pip install --upgrade pip
+    pip install --upgrade build
     ```
+
+5. Install using `pip`:
+    ```bash
+    pip install git+https://github.com/SWastling/musclemap.git
+    ```
+
+## License
+See [MIT license](./LICENSE)
+
 ## Authors and Acknowledgements
 Dr Stephen Wastling 
 ([stephen.wastling@nhs.net](mailto:stephen.wastling@nhs.net)) based on a 
-collection of scripts written in Python 2 by Dr Chris Sinclair. This initial 
+collection of scripts written in Python 2 by Chris Sinclair. This initial 
 release was tested against the previous implementations of the code to ensure 
 it produced identical results. 
 
