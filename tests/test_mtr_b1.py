@@ -3,9 +3,11 @@ import numpy as np
 import pathlib
 import pytest
 
-import mtr_b1
-import vercheck
+import musclemap.mtr_b1 as mtr_b1
+import musclemap.vercheck as vercheck
 
+THIS_DIR = pathlib.Path(__file__).resolve().parent
+TEST_DATA_DIR = THIS_DIR / "test_data"
 
 def perror(r_fp, t_fp):
     """
@@ -44,7 +46,7 @@ def perror(r_fp, t_fp):
     return 100.0 * np.sqrt(np.mean(np.square(r - t)) / np.mean(np.square(r)))
 
 
-perror_path = pathlib.Path('test_data/perror/')
+perror_path = TEST_DATA_DIR / 'perror'
 
 
 @pytest.mark.parametrize("ref_fp, test_fp, expected_output ",
@@ -153,7 +155,7 @@ def test_calc_b1scf():
 def test_process_b1_correction(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/mtr-b1')
+    data_dir = TEST_DATA_DIR / 'mtr-b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -175,7 +177,7 @@ def test_process_b1_correction(tmp_path):
 def test_process_mtr_b1(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/mtr-b1')
+    data_dir = TEST_DATA_DIR / 'mtr-b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 

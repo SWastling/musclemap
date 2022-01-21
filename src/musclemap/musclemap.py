@@ -1,25 +1,28 @@
-#!/usr/bin/env python3
 """
 Calculate B1, fat fraction, magnetisation transfer ratio or T2 maps
 """
 
-__author__ = "Stephen Wastling"
-
 import argparse
-import nibabel as nib
 import pathlib
 import subprocess as sp
 import sys
 
-# local modules
-import b1
-import config
-import ff
-import mtr
-import mtr_b1
-import preproc
-import t2
-import vercheck
+import importlib_metadata as metadata
+
+import musclemap.b1 as b1
+import musclemap.config as config
+import musclemap.ff as ff
+import musclemap.mtr as mtr
+import musclemap.mtr_b1 as mtr_b1
+import musclemap.preproc as preproc
+import musclemap.t2 as t2
+import musclemap.vercheck as vercheck
+
+
+try:
+    __version__ = metadata.version("musclemap")
+except metadata.PackageNotFoundError:  # pragma: no cover
+    __version__ = "unknown"
 
 
 def main():
@@ -55,6 +58,12 @@ def main():
     parser.add_argument("-quiet", help="don't display information messages or "
                                        "progress status",
                         action='store_true')
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
 
     parser.add_argument('--any-version', dest='any_version',
                         default=False, action="store_true",
@@ -189,14 +198,7 @@ def main():
 
     args = parser.parse_args()
 
-    script_fp = pathlib.Path(__file__).resolve()
-
-    print("* checking version of %s and libraries" % script_fp.name)
-    vercheck.check_script_ver(script_fp, args.any_version)
-
-    vercheck.check_lib_ver('nibabel', nib.__version__,
-                           config.NIBABEL_VERSIONS, args.any_version)
-
+    print("* checking version of FSL")
     fsldir = vercheck.get_fsldir()
     vercheck.check_lib_ver('FSL', vercheck.get_fsl_ver(fsldir),
                            config.FSL_VERSIONS, args.any_version)

@@ -1,7 +1,7 @@
 import nibabel as nib
 import numpy as np
 
-import preproc
+import musclemap.preproc as preproc
 
 
 def calc_t2(e1, e2, te1, te2):

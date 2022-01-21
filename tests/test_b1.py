@@ -3,7 +3,10 @@ import numpy as np
 import pathlib
 import pytest
 
-import b1
+import musclemap.b1 as b1
+
+THIS_DIR = pathlib.Path(__file__).resolve().parent
+TEST_DATA_DIR = THIS_DIR / "test_data"
 
 
 def perror(r_fp, t_fp):
@@ -43,7 +46,7 @@ def perror(r_fp, t_fp):
     return 100.0 * np.sqrt(np.mean(np.square(r - t)) / np.mean(np.square(r)))
 
 
-perror_path = pathlib.Path('test_data/perror/')
+perror_path = TEST_DATA_DIR / 'perror'
 
 
 @pytest.mark.parametrize("ref_fp, test_fp, expected_output ",
@@ -79,7 +82,7 @@ def test_b1_calc(fa60, fa120, expected_output):
 def test_process_b1(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/b1')
+    data_dir = TEST_DATA_DIR / 'b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 

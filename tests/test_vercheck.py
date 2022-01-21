@@ -1,62 +1,9 @@
 import os
 import pytest
-import subprocess as sp
 from unittest import mock
 
-import config
-import vercheck
-
-
-def test_git_version(tmp_path):
-
-    assert vercheck.git_version(tmp_path) == ('unknown', False)
-
-    # Set up a mock git repo
-    sp.run(['git', 'init'], check=True, text=True, cwd=tmp_path)
-
-    assert vercheck.git_version(tmp_path) == ('unknown', False)
-
-    # Add a file to the git repo
-    test_fp = tmp_path / 'test.txt'
-    test_fp.touch()
-
-    assert vercheck.git_version(tmp_path) == ('unknown', False)
-
-    # Add the file to the repo
-    sp.run(['git', 'add', test_fp], check=True, text=True, cwd=tmp_path)
-
-    assert vercheck.git_version(tmp_path) == ('unknown', False)
-
-    # Commit changes
-    sp.run(['git', 'commit', '-a', '-m', '"Mock commit"'],
-           check=True, text=True, cwd=tmp_path)
-
-    assert vercheck.git_version(tmp_path) == ('unknown', False)
-
-    # Tag as release
-    sp.run(['git', 'tag', '-a', 'release-1.0.0', '-m', '"Release 1.0.0"'],
-           check=True, text=True, cwd=tmp_path)
-
-    assert vercheck.git_version(tmp_path) == ('release-1.0.0', True)
-
-    # Make the repo dirty
-    test_fp.write_text('Hello')
-
-    sp_out = sp.run(['git', 'describe', '--tags', '--long',
-                     '--dirty=+'], check=True, capture_output=True,
-                    text=True, cwd=tmp_path)
-
-    assert vercheck.git_version(tmp_path) == (sp_out.stdout.strip(), False)
-
-    # Commit on top of tag as release
-    sp.run(['git', 'commit', '-a', '-m', '"Mock commit 2"'],
-           check=True, text=True, cwd=tmp_path)
-
-    sp_out = sp.run(['git', 'describe', '--tags', '--long',
-                     '--dirty=+'], check=True, capture_output=True,
-                    text=True, cwd=tmp_path)
-
-    assert vercheck.git_version(tmp_path) == (sp_out.stdout.strip(), False)
+import musclemap.config as config
+import musclemap.vercheck as vercheck
 
 
 def test_get_fsldir(capsys, tmp_path):
@@ -93,50 +40,6 @@ def test_get_fsl_ver(tmp_path):
         fslversion_fp.write_text('1.0.0:abcde')
         fsldir = vercheck.get_fsldir()
         assert vercheck.get_fsl_ver(fsldir) == 'unknown'
-
-
-def test_check_script_ver(tmp_path, capsys):
-
-    script_fp = tmp_path / 'test_script.py'
-
-    # script release check fail and exit
-    with pytest.raises(SystemExit) as pytest_wrapped_e:
-        vercheck.check_script_ver(script_fp, False)
-
-    assert pytest_wrapped_e.type == SystemExit
-    assert pytest_wrapped_e.value.code == 1
-    captured = capsys.readouterr()
-    assert captured.out == "** FAIL %s not tagged as a clean release " \
-                           "(version %s)\n" % (script_fp.name, 'unknown')
-    assert captured.err == "** exiting\n"
-
-    # script check fail and don't exit
-    vercheck.check_script_ver(script_fp, True)
-    captured = capsys.readouterr()
-    assert captured.out == "** FAIL %s not tagged as a clean release " \
-                           "(version %s)\n" % (script_fp.name, 'unknown')
-
-    # script check pass and don't exit
-    # Set up a mock git repo
-    sp.run(['git', 'init'], check=True, text=True, cwd=tmp_path)
-
-    script_fp.touch()
-
-    # Add the file to the repo
-    sp.run(['git', 'add', script_fp], check=True, text=True, cwd=tmp_path)
-
-    # Commit changes
-    sp.run(['git', 'commit', '-a', '-m', '"Mock commit"'],
-           check=True, text=True, cwd=tmp_path)
-
-    # Tag as release
-    sp.run(['git', 'tag', '-a', 'release-1.0.0', '-m', '"Release 1.0.0"'],
-           check=True, text=True, cwd=tmp_path)
-
-    vercheck.check_script_ver(script_fp, True)
-    captured = capsys.readouterr()
-    assert captured.out == "** PASS release check on %s (%s)\n" \
-           % (script_fp.name, 'release-1.0.0')
 
 
 def test_check_lib_ver(capsys):

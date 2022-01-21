@@ -1,4 +1,4 @@
-import config
+import musclemap.config as config
 
 
 def test_config():

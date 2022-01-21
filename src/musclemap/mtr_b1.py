@@ -1,9 +1,9 @@
 import nibabel as nib
 import numpy as np
 
-import b1
-import mtr
-import preproc
+import musclemap.b1 as b1
+import musclemap.mtr as mtr
+import musclemap.preproc as preproc
 
 
 def calc_b1pcf(mtr_masked, b1_masked, b1pcf):

@@ -1,10 +1,13 @@
-from musclemap import *
+import musclemap.preproc as preproc
+import musclemap.vercheck as vercheck
 import nibabel as nib
 import numpy as np
 import pytest
 import pathlib
 import subprocess as sp
 
+THIS_DIR = pathlib.Path(__file__).resolve().parent
+TEST_DATA_DIR = THIS_DIR / "test_data"
 
 def perror(r_fp, t_fp):
     """
@@ -43,7 +46,7 @@ def perror(r_fp, t_fp):
     return 100.0 * np.sqrt(np.mean(np.square(r - t)) / np.mean(np.square(r)))
 
 
-perror_path = pathlib.Path('test_data/perror/')
+perror_path = TEST_DATA_DIR / 'perror'
 
 
 @pytest.mark.parametrize("ref_fp, test_fp, expected_output ",
@@ -66,12 +69,32 @@ perror_path = pathlib.Path('test_data/perror/')
 def test_perror(ref_fp, test_fp, expected_output):
     assert perror(ref_fp, test_fp) == expected_output
 
+SCRIPT_NAME = "musclemap"
+SCRIPT_USAGE = f"usage: {SCRIPT_NAME} [-h] [-o output_folder] [-r] [-m mask]"
+
+def test_prints_help_1(script_runner):
+    result = script_runner.run(SCRIPT_NAME)
+    assert result.success
+    assert result.stdout.startswith(SCRIPT_USAGE)
+
+
+def test_prints_help_2(script_runner):
+    result = script_runner.run(SCRIPT_NAME, "-h")
+    assert result.success
+    assert result.stdout.startswith(SCRIPT_USAGE)
+
+
+def test_prints_help_for_invalid_option(script_runner):
+    result = script_runner.run(SCRIPT_NAME, "-!")
+    assert not result.success
+    assert result.stderr.startswith(SCRIPT_USAGE)
+
 
 def test_musclemap_b1(tmp_path):
 
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/b1')
+    data_dir = TEST_DATA_DIR / 'b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -91,7 +114,7 @@ def test_musclemap_b1(tmp_path):
 def test_musclemap_b1_reg(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/b1')
+    data_dir = TEST_DATA_DIR / 'b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -111,7 +134,7 @@ def test_musclemap_b1_reg(tmp_path):
 def test_musclemap_b1_mask(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/b1')
+    data_dir = TEST_DATA_DIR / 'b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -132,7 +155,7 @@ def test_musclemap_b1_mask(tmp_path):
 def test_musclemap_b1_crop(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/b1')
+    data_dir = TEST_DATA_DIR / 'b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -153,7 +176,7 @@ def test_musclemap_b1_crop(tmp_path):
 def test_musclemap_ff_thigh(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/siemens/thigh')
+    data_dir = TEST_DATA_DIR / 'ff/siemens/thigh'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -184,7 +207,7 @@ def test_musclemap_ff_thigh(tmp_path):
 def test_musclemap_ff_hand_reg(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/siemens/hand_reg')
+    data_dir = TEST_DATA_DIR / 'ff/siemens/hand_reg'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -215,7 +238,7 @@ def test_musclemap_ff_hand_reg(tmp_path):
 def test_musclemap_ff_foot(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/siemens/foot')
+    data_dir = TEST_DATA_DIR / 'ff/siemens/foot'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -246,7 +269,7 @@ def test_musclemap_ff_foot(tmp_path):
 def test_musclemap_ff_calf3d(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/siemens/calf3D')
+    data_dir = TEST_DATA_DIR / 'ff/siemens/calf3D'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -277,7 +300,7 @@ def test_musclemap_ff_calf3d(tmp_path):
 def test_musclemap_ff_thigh_ge(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/ge/thigh')
+    data_dir = TEST_DATA_DIR / 'ff/ge/thigh'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -308,7 +331,7 @@ def test_musclemap_ff_thigh_ge(tmp_path):
 def test_musclemap_ff_thigh_intermed(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/siemens/thigh')
+    data_dir = TEST_DATA_DIR / 'ff/siemens/thigh'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -367,7 +390,7 @@ def test_musclemap_mtr_1(tmp_path):
 
     pthresh = 1.0
     
-    data_dir = pathlib.Path('test_data/mtr')
+    data_dir = TEST_DATA_DIR / 'mtr'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -387,7 +410,7 @@ def test_musclemap_mtr_1(tmp_path):
 def test_musclemap_mtr_b1(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/mtr-b1')
+    data_dir = TEST_DATA_DIR / 'mtr-b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -420,7 +443,7 @@ def test_musclemap_t2(tmp_path):
     # less than 2% different
     pthresh = 2.0
 
-    data_dir = pathlib.Path('test_data/t2')
+    data_dir = TEST_DATA_DIR / 't2'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 

@@ -3,9 +3,12 @@ import numpy as np
 import pathlib
 import pytest
 
-import preproc
-import vercheck
+import musclemap.preproc as preproc
+import musclemap.vercheck as vercheck
 
+
+THIS_DIR = pathlib.Path(__file__).resolve().parent
+TEST_DATA_DIR = THIS_DIR / "test_data"
 
 def perror(r_fp, t_fp):
     """
@@ -44,7 +47,7 @@ def perror(r_fp, t_fp):
     return 100.0 * np.sqrt(np.mean(np.square(r - t)) / np.mean(np.square(r)))
 
 
-perror_path = pathlib.Path('test_data/perror/')
+perror_path = TEST_DATA_DIR / 'perror'
 
 
 @pytest.mark.parametrize("ref_fp, test_fp, expected_output ",
@@ -104,7 +107,7 @@ def test_check_files_exist_2(tmp_path, capsys):
 
 def test_check_shape_and_orientation_1(capsys):
 
-    data_dir = pathlib.Path('test_data/b1/input/')
+    data_dir = TEST_DATA_DIR / 'b1/input'
     a_fp = data_dir / 'se_fa060.nii.gz'
     b_fp = data_dir / 'se_fa120.nii.gz'
     fp_dict = {'a': a_fp, 'b': b_fp}
@@ -119,11 +122,10 @@ def test_check_shape_and_orientation_1(capsys):
 def test_check_shape_and_orientation_2(capsys):
     # This checks for mis-matched matrix sizes
 
-    data_dir = pathlib.Path('test_data/')
-    a_fp = data_dir / 'b1' / 'input' / 'se_fa060.nii.gz'
-    b_fp = data_dir / 'b1' / 'output' / 'b1_c.nii.gz'
+    a_fp = TEST_DATA_DIR / 'b1' / 'input' / 'se_fa060.nii.gz'
+    b_fp = TEST_DATA_DIR / 'b1' / 'output' / 'b1_c.nii.gz'
     fp_dict = {'a': a_fp, 'b': b_fp}
-    ref_fp = data_dir / 'b1' / 'input' / 'se_fa060.nii.gz'
+    ref_fp = TEST_DATA_DIR / 'b1' / 'input' / 'se_fa060.nii.gz'
 
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         preproc.check_shape_and_orientation(fp_dict, ref_fp)
@@ -139,11 +141,10 @@ def test_check_shape_and_orientation_2(capsys):
 def test_check_shape_and_orientation_3(capsys):
     # This checks for mis-matched affines (s- or q-forms)
 
-    data_dir = pathlib.Path('test_data')
-    a_fp = data_dir / 'b1' / 'input' / 'se_fa060.nii.gz'
-    b_fp = data_dir / 'mtr' / 'input' / 'mt_on.nii.gz'
+    a_fp = TEST_DATA_DIR / 'b1' / 'input' / 'se_fa060.nii.gz'
+    b_fp = TEST_DATA_DIR / 'mtr' / 'input' / 'mt_on.nii.gz'
     fp_dict = {'a': a_fp, 'b': b_fp}
-    ref_fp = data_dir / 'b1' / 'input' / 'se_fa060.nii.gz'
+    ref_fp = TEST_DATA_DIR / 'b1' / 'input' / 'se_fa060.nii.gz'
 
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         preproc.check_shape_and_orientation(fp_dict, ref_fp)
@@ -167,10 +168,9 @@ def test_remove_file_ext(fp, expected_output):
 def test_register(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data')
-    fa60_fp = data_dir / 'b1' / 'input' / 'se_fa060.nii.gz'
-    fa120_fp = data_dir / 'b1' / 'input' / 'se_fa120.nii.gz'
-    ref_reg_fp = data_dir / 'b1' / 'output' / 'se_fa120_r.nii.gz'
+    fa60_fp = TEST_DATA_DIR / 'b1' / 'input' / 'se_fa060.nii.gz'
+    fa120_fp = TEST_DATA_DIR / 'b1' / 'input' / 'se_fa120.nii.gz'
+    ref_reg_fp = TEST_DATA_DIR / 'b1' / 'output' / 'se_fa120_r.nii.gz'
 
     fp_dict = {'fa60_fp': fa60_fp, 'fa120_fp': fa120_fp}
 
@@ -184,7 +184,7 @@ def test_register(tmp_path):
 def test_register_dixon(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/siemens/hand_reg')
+    data_dir = TEST_DATA_DIR / 'ff/siemens/hand_reg'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -225,7 +225,7 @@ def test_register_t2(tmp_path):
 
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/t2')
+    data_dir = TEST_DATA_DIR / 't2'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -250,7 +250,7 @@ def test_register_t2(tmp_path):
 def test_mask(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/ff/ge/thigh_masked')
+    data_dir = TEST_DATA_DIR / 'ff/ge/thigh_masked'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -279,7 +279,7 @@ def test_crop(tmp_path):
     pthresh = 1.0
     crop_dims = [0, 56, 0, -1, 0, -1]
 
-    data_dir = pathlib.Path('test_data/b1')
+    data_dir = TEST_DATA_DIR / 'b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -304,7 +304,7 @@ def test_crop(tmp_path):
 def test_resample(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/mtr-b1')
+    data_dir = TEST_DATA_DIR / 'mtr-b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
@@ -330,7 +330,7 @@ def test_resample(tmp_path):
 def test_create_mask(tmp_path):
     pthresh = 1.0
 
-    data_dir = pathlib.Path('test_data/mtr-b1')
+    data_dir = TEST_DATA_DIR / 'mtr-b1'
     input_dir = data_dir / 'input'
     output_dir = data_dir / 'output'
 
