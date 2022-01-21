@@ -78,6 +78,7 @@ the full image extent for that dimension) using `fslroi`
 - `-v`: view map(s) in `fsleyes`
 - `-quiet`: don't display information messages or progress status
 - `--version`: display version and exit
+- `--any-version`: don't abort if version checks fail 
 
 ### ff  algorithm
 - `-s`: separate images in x-direction during phase unwrapping. This is
@@ -91,7 +92,7 @@ straight line fit of B1 to MTR (default=0.0085)
 
 ## Software Requirements
 
-- [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) (version 6.0.3)
+- [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) (version 6.0.3 or 6.0.4)
 
 ## Installing
 1. Create a directory to store the package e.g.:
