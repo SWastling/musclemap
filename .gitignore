@@ -6,10 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+# Pycharm project
 .idea/
-
-#Matlab Autosave
-*.m~
 
 # Distribution / packaging
 .Python
@@ -89,6 +87,7 @@ celerybeat-schedule
 env/
 venv/
 ENV/
+musclemap-tox-env/
 
 # Spyder project settings
 .spyderproject
