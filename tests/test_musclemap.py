@@ -90,7 +90,7 @@ def test_prints_help_for_invalid_option(script_runner):
     assert result.stderr.startswith(SCRIPT_USAGE)
 
 
-def test_musclemap_b1(tmp_path):
+def test_musclemap_b1(tmp_path, script_runner):
 
     pthresh = 1.0
 
@@ -103,15 +103,23 @@ def test_musclemap_b1(tmp_path):
 
     ref_b1_fp = output_dir / 'b1.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 'b1', fa60_fp,
-            fa120_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "b1",
+        fa60_fp,
+        fa120_fp
+    )
+    assert not result.success
+
 
     b1_fp = tmp_path / 'b1.nii.gz'
 
     assert perror(ref_b1_fp, b1_fp) < pthresh
 
 
-def test_musclemap_b1_reg(tmp_path):
+def test_musclemap_b1_reg(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'b1'
@@ -123,15 +131,24 @@ def test_musclemap_b1_reg(tmp_path):
 
     ref_b1_fp = output_dir / 'b1_r.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-r', '-o', tmp_path, 'b1',
-            fa60_fp, fa120_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-r",
+        "-o",
+        str(tmp_path),
+        "b1",
+        fa60_fp,
+        fa120_fp
+    )
+    assert not result.success
+
 
     b1_fp = tmp_path / 'b1.nii.gz'
 
     assert perror(ref_b1_fp, b1_fp) < pthresh
 
 
-def test_musclemap_b1_mask(tmp_path):
+def test_musclemap_b1_mask(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'b1'
@@ -144,15 +161,23 @@ def test_musclemap_b1_mask(tmp_path):
 
     ref_b1_fp = output_dir / 'b1_m.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-m', mask_fp, '-o', tmp_path,
-            'b1', fa60_fp, fa120_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-m",
+        "-o",
+        str(tmp_path),
+        "b1",
+        fa60_fp,
+        fa120_fp
+    )
+    assert not result.success
 
     b1_fp = tmp_path / 'b1.nii.gz'
 
     assert perror(ref_b1_fp, b1_fp) < pthresh
 
 
-def test_musclemap_b1_crop(tmp_path):
+def test_musclemap_b1_crop(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'b1'
@@ -165,15 +190,25 @@ def test_musclemap_b1_crop(tmp_path):
 
     ref_b1_fp = output_dir / 'b1_c.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-c', '0', '56', '0', '-1', '0',
-            '-1', '-o', tmp_path, 'b1', fa60_fp, fa120_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-c",
+        "0", "56", "0","-1", "0", "-1",
+        "-o",
+        str(tmp_path),
+        "b1",
+        fa60_fp,
+        fa120_fp
+    )
+    assert not result.success
+
 
     b1_fp = tmp_path / 'b1.nii.gz'
 
     assert perror(ref_b1_fp, b1_fp) < pthresh
 
 
-def test_musclemap_ff_thigh(tmp_path):
+def test_musclemap_ff_thigh(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'ff/siemens/thigh'
@@ -191,9 +226,15 @@ def test_musclemap_ff_thigh(tmp_path):
     ref_f_fp = output_dir / 'fat.nii.gz'
     ref_w_fp = output_dir / 'water.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 'ff',
-            mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
-            'siemens', '-s'])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "ff",
+        mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
+        'siemens', '-s'
+    )
+    assert not result.success
 
     ff_fp = tmp_path / 'fatfraction.nii.gz'
     f_fp = tmp_path / 'fat.nii.gz'
@@ -204,7 +245,7 @@ def test_musclemap_ff_thigh(tmp_path):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
-def test_musclemap_ff_hand_reg(tmp_path):
+def test_musclemap_ff_hand_reg(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'ff/siemens/hand_reg'
@@ -222,9 +263,13 @@ def test_musclemap_ff_hand_reg(tmp_path):
     ref_f_fp = output_dir / 'fat.nii.gz'
     ref_w_fp = output_dir / 'water.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-r', '-o', tmp_path, 'ff',
-            mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
-            'siemens'])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        '-r', '-o', tmp_path, 'ff',
+        mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
+        'siemens'
+    )
+    assert not result.success
 
     ff_fp = tmp_path / 'fatfraction.nii.gz'
     f_fp = tmp_path / 'fat.nii.gz'
@@ -235,7 +280,7 @@ def test_musclemap_ff_hand_reg(tmp_path):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
-def test_musclemap_ff_foot(tmp_path):
+def test_musclemap_ff_foot(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'ff/siemens/foot'
@@ -253,9 +298,16 @@ def test_musclemap_ff_foot(tmp_path):
     ref_f_fp = output_dir / 'fat.nii.gz'
     ref_w_fp = output_dir / 'water.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 'ff',
-            mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
-            'siemens'])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "ff",
+        mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
+        'siemens'
+    )
+    assert not result.success
+
 
     ff_fp = tmp_path / 'fatfraction.nii.gz'
     f_fp = tmp_path / 'fat.nii.gz'
@@ -266,7 +318,7 @@ def test_musclemap_ff_foot(tmp_path):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
-def test_musclemap_ff_calf3d(tmp_path):
+def test_musclemap_ff_calf3d(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'ff/siemens/calf3D'
@@ -284,9 +336,15 @@ def test_musclemap_ff_calf3d(tmp_path):
     ref_f_fp = output_dir / 'fat.nii.gz'
     ref_w_fp = output_dir / 'water.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 'ff',
-            mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
-            'siemens', '-s'])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "ff",
+        mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
+        'siemens', '-s'
+    )
+    assert not result.success
 
     ff_fp = tmp_path / 'fatfraction.nii.gz'
     f_fp = tmp_path / 'fat.nii.gz'
@@ -297,7 +355,7 @@ def test_musclemap_ff_calf3d(tmp_path):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
-def test_musclemap_ff_thigh_ge(tmp_path):
+def test_musclemap_ff_thigh_ge(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'ff/ge/thigh'
@@ -315,9 +373,17 @@ def test_musclemap_ff_thigh_ge(tmp_path):
     ref_f_fp = output_dir / 'fat.nii.gz'
     ref_w_fp = output_dir / 'water.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, '-c', '0', '-1',
-            '128', '256', '0', '-1', 'ff', mminus1_fp, phiminus1_fp,
-            m0_fp, phi0_fp, m1_fp, phi1_fp, 'ge', '-s'])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        '-c', '0', '-1',
+        '128', '256', '0', '-1',
+        "-o",
+        str(tmp_path),
+        "ff",
+        mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
+        'ge', '-s'
+    )
+    assert not result.success
 
     ff_fp = tmp_path / 'fatfraction.nii.gz'
     f_fp = tmp_path / 'fat.nii.gz'
@@ -328,7 +394,7 @@ def test_musclemap_ff_thigh_ge(tmp_path):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
-def test_musclemap_ff_thigh_intermed(tmp_path):
+def test_musclemap_ff_thigh_intermed(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'ff/siemens/thigh'
@@ -355,9 +421,16 @@ def test_musclemap_ff_thigh_intermed(tmp_path):
     ref_phim_right_uw_fp = output_dir / 'phim_right_uw.nii.gz'
     ref_phim_uw_fp = output_dir / 'phim_uw.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-k', '-o', tmp_path, 'ff',
-            mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
-            'siemens', '-s', '-nb'])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-k",
+        "-o",
+        str(tmp_path),
+        "ff",
+        mminus1_fp, phiminus1_fp, m0_fp, phi0_fp, m1_fp, phi1_fp,
+        'siemens', '-s', "-nb"
+    )
+    assert not result.success
 
     ff_fp = tmp_path / 'fatfraction.nii.gz'
     ff_nb_fp = tmp_path / 'fatfraction_nb.nii.gz'
@@ -386,7 +459,7 @@ def test_musclemap_ff_thigh_intermed(tmp_path):
     assert perror(ref_phim_uw_fp, phim_uw_fp) < pthresh
 
 
-def test_musclemap_mtr_1(tmp_path):
+def test_musclemap_mtr_1(tmp_path, script_runner):
 
     pthresh = 1.0
     
@@ -399,15 +472,20 @@ def test_musclemap_mtr_1(tmp_path):
 
     ref_mtr_fp = output_dir / 'mtr.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 'mtr', mt_on_fp,
-            mt_off_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "mtr", mt_on_fp, mt_off_fp
+    )
+    assert not result.success
 
     mtr_fp = tmp_path / 'mtr.nii.gz'
 
     assert perror(ref_mtr_fp, mtr_fp) < pthresh
 
 
-def test_musclemap_mtr_b1(tmp_path):
+def test_musclemap_mtr_b1(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / 'mtr-b1'
@@ -425,8 +503,13 @@ def test_musclemap_mtr_b1(tmp_path):
     ref_mtr_b1pcf_fp = output_dir / 'mtr_b1pcf.nii.gz'
     ref_mtr_b1scf_fp = output_dir / 'mtr_b1scf.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 'mtr-b1',
-            mt_on_fp, mt_off_fp, fa60_fp, fa120_fp, res_ref_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "mtr-b1", mt_on_fp, mt_off_fp, fa60_fp, fa120_fp, res_ref_fp
+    )
+    assert not result.success
 
     mtr_fp = tmp_path / 'mtr.nii.gz'
     mtr_b1pcf_fp = tmp_path / 'mtr_b1pcf.nii.gz'
@@ -437,7 +520,7 @@ def test_musclemap_mtr_b1(tmp_path):
     assert perror(ref_mtr_b1scf_fp, mtr_b1scf_fp) < pthresh
 
 
-def test_musclemap_t2(tmp_path):
+def test_musclemap_t2(tmp_path, script_runner):
     # When running on stoney with FSL 6.0.4 the co-registration step of the T2
     # map production is marginally different, but within a mask the images are
     # less than 2% different
@@ -455,8 +538,13 @@ def test_musclemap_t2(tmp_path):
     ref_s0_fp = output_dir / 's0_m.nii.gz'
     mask_fp = output_dir / 'mask.nii.gz'
 
-    sp.run(['./musclemap.py', '--any-version', '-o', tmp_path, 't2',
-            e1_fp, e2_fp, '16.0', '56.0', reg_ref_fp])
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "t2", e1_fp, e2_fp, '16.0', '56.0', reg_ref_fp
+    )
+    assert not result.success
 
     t2_fp = tmp_path / 't2.nii.gz'
     s0_fp = tmp_path / 's0.nii.gz'
