@@ -11,6 +11,7 @@ THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
 FSL_DIR = vercheck.get_fsldir()
 
+
 def perror(r_fp, t_fp):
     """
     calculate the percentage error between two nifti files; a reference and
@@ -581,9 +582,7 @@ def test_musclemap_t2(tmp_path, script_runner):
 
     fp_dict = {"t2_fp": t2_fp, "s0_fp": s0_fp}
 
-    fp_dict, to_delete = preproc.mask(
-        fp_dict, mask_fp, tmp_path, [], FSL_DIR, False
-    )
+    fp_dict, to_delete = preproc.mask(fp_dict, mask_fp, tmp_path, [], FSL_DIR, False)
 
     assert perror(ref_t2_fp, fp_dict["t2_fp"]) < pthresh
     assert perror(ref_s0_fp, fp_dict["s0_fp"]) < pthresh

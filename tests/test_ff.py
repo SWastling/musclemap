@@ -11,6 +11,7 @@ THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
 FSL_DIR = vercheck.get_fsldir()
 
+
 def perror(r_fp, t_fp):
     """
     calculate the percentage error between two nifti files; a reference and

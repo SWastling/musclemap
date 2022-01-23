@@ -225,9 +225,7 @@ def test_register_dixon(tmp_path):
         "phi1_fp": phi1_ref_fp,
     }
 
-    fp_dict, to_delete = preproc.register_dixon(
-        fp_dict, tmp_path, [], FSL_DIR, False
-    )
+    fp_dict, to_delete = preproc.register_dixon(fp_dict, tmp_path, [], FSL_DIR, False)
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
@@ -279,9 +277,7 @@ def test_mask(tmp_path):
 
     fp_ref_dict = {"mminus1_fp": mminus1_ref_fp, "phiminus1_fp": phiminus1_ref_fp}
 
-    fp_dict, to_delete = preproc.mask(
-        fp_dict, mask_fp, tmp_path, [], FSL_DIR, False
-    )
+    fp_dict, to_delete = preproc.mask(fp_dict, mask_fp, tmp_path, [], FSL_DIR, False)
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
@@ -306,9 +302,7 @@ def test_crop(tmp_path):
 
     fp_ref_dict = {"a": a_ref_fp, "b": b_ref_fp}
 
-    fp_dict, to_delete = preproc.crop(
-        fp_dict, crop_dims, tmp_path, [], FSL_DIR, False
-    )
+    fp_dict, to_delete = preproc.crop(fp_dict, crop_dims, tmp_path, [], FSL_DIR, False)
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
