@@ -112,7 +112,7 @@ def test_musclemap_b1(tmp_path, script_runner):
     result = script_runner.run(
         SCRIPT_NAME, "-o", str(tmp_path), "b1", str(fa60_fp), str(fa120_fp)
     )
-    assert not result.success
+    assert result.success
 
     b1_fp = tmp_path / "b1.nii.gz"
 
@@ -134,7 +134,7 @@ def test_musclemap_b1_reg(tmp_path, script_runner):
     result = script_runner.run(
         SCRIPT_NAME, "-r", "-o", str(tmp_path), "b1", str(fa60_fp), str(fa120_fp)
     )
-    assert not result.success
+    assert result.success
 
     b1_fp = tmp_path / "b1.nii.gz"
 
@@ -164,7 +164,7 @@ def test_musclemap_b1_mask(tmp_path, script_runner):
         str(fa60_fp),
         str(fa120_fp),
     )
-    assert not result.success
+    assert result.success
 
     b1_fp = tmp_path / "b1.nii.gz"
 
@@ -198,7 +198,7 @@ def test_musclemap_b1_crop(tmp_path, script_runner):
         str(fa60_fp),
         str(fa120_fp),
     )
-    assert not result.success
+    assert result.success
 
     b1_fp = tmp_path / "b1.nii.gz"
 
@@ -237,7 +237,7 @@ def test_musclemap_ff_thigh(tmp_path, script_runner):
         "siemens",
         "-s",
     )
-    assert not result.success
+    assert result.success
 
     ff_fp = tmp_path / "fatfraction.nii.gz"
     f_fp = tmp_path / "fat.nii.gz"
@@ -280,7 +280,7 @@ def test_musclemap_ff_hand_reg(tmp_path, script_runner):
         str(phi1_fp),
         "siemens",
     )
-    assert not result.success
+    assert result.success
 
     ff_fp = tmp_path / "fatfraction.nii.gz"
     f_fp = tmp_path / "fat.nii.gz"
@@ -322,7 +322,7 @@ def test_musclemap_ff_foot(tmp_path, script_runner):
         str(phi1_fp),
         "siemens",
     )
-    assert not result.success
+    assert result.success
 
     ff_fp = tmp_path / "fatfraction.nii.gz"
     f_fp = tmp_path / "fat.nii.gz"
@@ -365,7 +365,7 @@ def test_musclemap_ff_calf3d(tmp_path, script_runner):
         "siemens",
         "-s",
     )
-    assert not result.success
+    assert result.success
 
     ff_fp = tmp_path / "fatfraction.nii.gz"
     f_fp = tmp_path / "fat.nii.gz"
@@ -415,7 +415,7 @@ def test_musclemap_ff_thigh_ge(tmp_path, script_runner):
         "ge",
         "-s",
     )
-    assert not result.success
+    assert result.success
 
     ff_fp = tmp_path / "fatfraction.nii.gz"
     f_fp = tmp_path / "fat.nii.gz"
@@ -469,7 +469,7 @@ def test_musclemap_ff_thigh_intermed(tmp_path, script_runner):
         "-s",
         "-nb",
     )
-    assert not result.success
+    assert result.success
 
     ff_fp = tmp_path / "fatfraction.nii.gz"
     ff_nb_fp = tmp_path / "fatfraction_nb.nii.gz"
@@ -514,7 +514,7 @@ def test_musclemap_mtr_1(tmp_path, script_runner):
     result = script_runner.run(
         SCRIPT_NAME, "-o", str(tmp_path), "mtr", str(mt_on_fp), str(mt_off_fp)
     )
-    assert not result.success
+    assert result.success
 
     mtr_fp = tmp_path / "mtr.nii.gz"
 
@@ -550,7 +550,7 @@ def test_musclemap_mtr_b1(tmp_path, script_runner):
         str(fa120_fp),
         str(res_ref_fp),
     )
-    assert not result.success
+    assert result.success
 
     mtr_fp = tmp_path / "mtr.nii.gz"
     mtr_b1pcf_fp = tmp_path / "mtr_b1pcf.nii.gz"
@@ -590,7 +590,7 @@ def test_musclemap_t2(tmp_path, script_runner):
         "56.0",
         str(reg_ref_fp),
     )
-    assert not result.success
+    assert result.success
 
     t2_fp = tmp_path / "t2.nii.gz"
     s0_fp = tmp_path / "s0.nii.gz"
