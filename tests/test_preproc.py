@@ -9,6 +9,7 @@ import musclemap.vercheck as vercheck
 
 THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
+FSL_DIR = vercheck.get_fsldir()
 
 
 def perror(r_fp, t_fp):
@@ -180,7 +181,7 @@ def test_register(tmp_path):
     fp_dict = {"fa60_fp": fa60_fp, "fa120_fp": fa120_fp}
 
     fp_dict, to_delete = preproc.register(
-        fp_dict, fp_dict["fa60_fp"], tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, fp_dict["fa60_fp"], tmp_path, [], FSL_DIR, False
     )
 
     assert to_delete == [fp_dict["fa120_fp"]]
@@ -225,7 +226,7 @@ def test_register_dixon(tmp_path):
     }
 
     fp_dict, to_delete = preproc.register_dixon(
-        fp_dict, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, tmp_path, [], FSL_DIR, False
     )
 
     for key in fp_dict:
@@ -252,7 +253,7 @@ def test_register_t2(tmp_path):
     fp_ref_dict = {"e1_fp": ref_e1_r_fp, "e2_fp": ref_e2_r_fp}
 
     fp_dict, to_delete = preproc.register_t2(
-        fp_dict, reg_ref_fp, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, reg_ref_fp, tmp_path, [], FSL_DIR, False
     )
 
     for key in fp_dict:
@@ -279,7 +280,7 @@ def test_mask(tmp_path):
     fp_ref_dict = {"mminus1_fp": mminus1_ref_fp, "phiminus1_fp": phiminus1_ref_fp}
 
     fp_dict, to_delete = preproc.mask(
-        fp_dict, mask_fp, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, mask_fp, tmp_path, [], FSL_DIR, False
     )
 
     for key in fp_dict:
@@ -306,7 +307,7 @@ def test_crop(tmp_path):
     fp_ref_dict = {"a": a_ref_fp, "b": b_ref_fp}
 
     fp_dict, to_delete = preproc.crop(
-        fp_dict, crop_dims, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, crop_dims, tmp_path, [], FSL_DIR, False
     )
 
     for key in fp_dict:
@@ -333,7 +334,7 @@ def test_resample(tmp_path):
     fp_ref_dict = {"mt_on_fp": ref_mt_on_fp, "mt_off_fp": ref_mt_off_fp}
 
     fp_dict, to_delete = preproc.resample(
-        fp_dict, res_ref_fp, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, res_ref_fp, tmp_path, [], FSL_DIR, False
     )
 
     for key in fp_dict:
@@ -352,7 +353,7 @@ def test_create_mask(tmp_path):
     ref_bgmask_fp = output_dir / "bgmask.nii.gz"
 
     bg_mask_fp, to_delete = preproc.create_mask(
-        res_ref_fp, tmp_path, [], vercheck.get_fsldir(), False
+        res_ref_fp, tmp_path, [], FSL_DIR, False
     )
 
     assert perror(ref_bgmask_fp, bg_mask_fp) < pthresh

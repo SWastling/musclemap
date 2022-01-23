@@ -9,7 +9,7 @@ import musclemap.vercheck as vercheck
 
 THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
-
+FSL_DIR = vercheck.get_fsldir()
 
 def perror(r_fp, t_fp):
     """
@@ -582,7 +582,7 @@ def test_musclemap_t2(tmp_path, script_runner):
     fp_dict = {"t2_fp": t2_fp, "s0_fp": s0_fp}
 
     fp_dict, to_delete = preproc.mask(
-        fp_dict, mask_fp, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, mask_fp, tmp_path, [], FSL_DIR, False
     )
 
     assert perror(ref_t2_fp, fp_dict["t2_fp"]) < pthresh

@@ -9,7 +9,7 @@ import musclemap.vercheck as vercheck
 
 THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
-
+FSL_DIR = vercheck.get_fsldir()
 
 def perror(r_fp, t_fp):
     """
@@ -241,7 +241,7 @@ def test_process_mtr_b1(tmp_path):
         res_ref_fp,
         tmp_path,
         [],
-        vercheck.get_fsldir(),
+        FSL_DIR,
         0.0085,
         False,
     )

@@ -10,6 +10,7 @@ import musclemap.vercheck as vercheck
 
 THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
+FSL_DIR = vercheck.get_fsldir()
 
 
 def perror(r_fp, t_fp):
@@ -130,13 +131,13 @@ def test_process_t2(tmp_path):
     mask_fp = output_dir / "mask.nii.gz"
 
     [t2_fp, s0_fp], to_delete = t2.process_t2(
-        fp_dict, 16.0, 56.0, reg_ref_fp, tmp_path, [], vercheck.get_fsldir(), False
+        fp_dict, 16.0, 56.0, reg_ref_fp, tmp_path, [], FSL_DIR, False
     )
 
     fp_dict = {"t2_fp": t2_fp, "s0_fp": s0_fp}
 
     fp_dict, to_delete = preproc.mask(
-        fp_dict, mask_fp, tmp_path, to_delete, vercheck.get_fsldir(), False
+        fp_dict, mask_fp, tmp_path, to_delete, FSL_DIR, False
     )
 
     assert perror(ref_t2_fp, fp_dict["t2_fp"]) < pthresh

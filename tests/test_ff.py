@@ -9,7 +9,7 @@ import musclemap.vercheck as vercheck
 
 THIS_DIR = pathlib.Path(__file__).resolve().parent
 TEST_DATA_DIR = THIS_DIR / "test_data"
-
+FSL_DIR = vercheck.get_fsldir()
 
 def perror(r_fp, t_fp):
     """
@@ -158,7 +158,7 @@ def test_unwrap(tmp_path):
     m0_fp = input_dir / "0008-Dixon_TE_460_th.nii.gz"
 
     phim_uw_fp, to_delete = ff.unwrap(
-        phim_fp, phim_shape, m0_fp, tmp_path, [], True, vercheck.get_fsldir(), False
+        phim_fp, phim_shape, m0_fp, tmp_path, [], True, FSL_DIR, False
     )
 
     assert perror(ref_phim_uw_fp, phim_uw_fp) < pthresh
@@ -297,7 +297,7 @@ def test_process_ff(tmp_path):
     ref_ff_fp = output_dir / "fatfraction.nii.gz"
 
     ff_fp, to_delete = ff.process_ff(
-        fp_dict, tmp_path, [], vercheck.get_fsldir(), False, "siemens", True, False
+        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", True, False
     )
 
     assert perror(ref_ff_fp, ff_fp) < pthresh
