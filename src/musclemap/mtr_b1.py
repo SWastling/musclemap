@@ -21,9 +21,8 @@ def calc_b1pcf(mtr_masked, b1_masked, b1pcf):
     :rtype: np.ndarray
     """
 
-    with np.errstate(divide='ignore', invalid='ignore'):
-        mtr_b1pcf = np.divide(mtr_masked,
-                              (1.0 + 100.0 * b1pcf * (b1_masked - 1.0)))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        mtr_b1pcf = np.divide(mtr_masked, (1.0 + 100.0 * b1pcf * (b1_masked - 1.0)))
         mtr_b1pcf = np.nan_to_num(mtr_b1pcf, copy=False, posinf=0.0, neginf=0.0)
 
     return mtr_b1pcf
@@ -67,7 +66,7 @@ def propagate_error_div(f, a, stderr_a, b, stderr_b):
     :return: standard error in f
     """
 
-    return f * np.sqrt((stderr_a / a)**2 + (stderr_b / b)**2)
+    return f * np.sqrt((stderr_a / a) ** 2 + (stderr_b / b) ** 2)
 
 
 def apply_b1scf(mtr, k, b1_perc_err):
@@ -81,7 +80,7 @@ def apply_b1scf(mtr, k, b1_perc_err):
     :return: mtr corrected for B1 error
     """
 
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         mtr_b1scf = np.divide(mtr, (k * b1_perc_err) + 1)
         mtr_b1scf = np.nan_to_num(mtr_b1scf, copy=False, posinf=0.0, neginf=0.0)
 
@@ -115,8 +114,9 @@ def calc_b1scf(mtr_masked, b1_masked):
 
     # Fit a straight line to the data
     # y = m x +c i.e. mtr = kspec * b1_error + mtr_true
-    [k_spec, mtr_true], cov = np.polyfit(b1_thr_vec, mtr_thr_vec, 1,
-                                         full=False, cov=True)
+    [k_spec, mtr_true], cov = np.polyfit(
+        b1_thr_vec, mtr_thr_vec, 1, full=False, cov=True
+    )
 
     # Standard error of slope and intercept are sqrt of diagonal elements of
     # covariance matrix
@@ -125,20 +125,23 @@ def calc_b1scf(mtr_masked, b1_masked):
     # Eqn 5 from Sinclair et al. NMR in Biomedicine 2012; 25: 262-270
     k = k_spec / mtr_true
 
-    k_error = propagate_error_div(k, k_spec, k_spec_error, mtr_true,
-                                  mtr_true_error)
+    k_error = propagate_error_div(k, k_spec, k_spec_error, mtr_true, mtr_true_error)
 
     mtr_b1scf = apply_b1scf(mtr_masked, k, b1_perc_err)
 
-    fit_param_dict = {'mtr_true': mtr_true, 'mtr_true_error': mtr_true_error,
-                      'k_spec': k_spec, 'k_spec_error': k_spec_error,
-                      'k': k, 'k_error': k_error}
+    fit_param_dict = {
+        "mtr_true": mtr_true,
+        "mtr_true_error": mtr_true_error,
+        "k_spec": k_spec,
+        "k_spec_error": k_spec_error,
+        "k": k,
+        "k_error": k_error,
+    }
 
     return mtr_b1scf, fit_param_dict
 
 
-def process_b1_correction(mtr_fp, b1_fp, bgmask_fp, out_dir, b1pcf,
-                          quiet=True):
+def process_b1_correction(mtr_fp, b1_fp, bgmask_fp, out_dir, b1pcf, quiet=True):
 
     """
     Calculate and then apply B1 correction to MTR images
@@ -160,7 +163,7 @@ def process_b1_correction(mtr_fp, b1_fp, bgmask_fp, out_dir, b1pcf,
     """
 
     if not quiet:
-        print('*** loading NIfTI image data')
+        print("*** loading NIfTI image data")
     mtr_obj = nib.load(str(mtr_fp))
     mtr = mtr_obj.get_fdata()
     affine_out = mtr_obj.header.get_best_affine()
@@ -169,43 +172,52 @@ def process_b1_correction(mtr_fp, b1_fp, bgmask_fp, out_dir, b1pcf,
     bgmask = nib.load(str(bgmask_fp)).get_fdata()
 
     if not quiet:
-        print('*** masking MTR and B1 maps')
+        print("*** masking MTR and B1 maps")
     mtr_masked = np.multiply(mtr, bgmask)
     b1_masked = np.multiply(b1, bgmask)
 
     if not quiet:
-        print('*** calculating MTR with population-level B1 correction')
+        print("*** calculating MTR with population-level B1 correction")
 
     mtr_b1pcf = calc_b1pcf(mtr_masked, b1_masked, b1pcf)
 
     if not quiet:
-        print('*** calculating MTR with subject-specific B1 correction')
+        print("*** calculating MTR with subject-specific B1 correction")
 
     mtr_b1scf, fit_param_dict = calc_b1scf(mtr_masked, b1_masked)
 
     if not quiet:
-        print('*** saving subject-specifc B1 inhomogeneity correction factor')
+        print("*** saving subject-specifc B1 inhomogeneity correction factor")
 
-    fit_params_fp = out_dir / 'mtrb1_fitparams.dat'
-    with open(fit_params_fp, 'w') as f:
+    fit_params_fp = out_dir / "mtrb1_fitparams.dat"
+    with open(fit_params_fp, "w") as f:
         for key, val in fit_param_dict.items():
-            f.write('%s: %g\n' % (key, val))
+            f.write("%s: %g\n" % (key, val))
 
     if not quiet:
-        print('*** saving NIfTI files')
-    mtr_b1pcf_fp = out_dir / 'mtr_b1pcf.nii.gz'
+        print("*** saving NIfTI files")
+    mtr_b1pcf_fp = out_dir / "mtr_b1pcf.nii.gz"
     mtr_b1pcf_obj = nib.nifti1.Nifti1Image(mtr_b1pcf, affine_out)
     mtr_b1pcf_obj.to_filename(str(mtr_b1pcf_fp))
 
-    mtr_b1scf_fp = out_dir / 'mtr_b1scf.nii.gz'
+    mtr_b1scf_fp = out_dir / "mtr_b1scf.nii.gz"
     mtr_b1scf_obj = nib.nifti1.Nifti1Image(mtr_b1scf, affine_out)
     mtr_b1scf_obj.to_filename(str(mtr_b1scf_fp))
 
     return mtr_b1pcf_fp, mtr_b1scf_fp
 
 
-def process_mtr_b1(fp_dict, fa60_fp, fa120_fp, res_ref_fp, out_dir, to_delete,
-                   fsldir, b1pcf, quiet=True):
+def process_mtr_b1(
+    fp_dict,
+    fa60_fp,
+    fa120_fp,
+    res_ref_fp,
+    out_dir,
+    to_delete,
+    fsldir,
+    b1pcf,
+    quiet=True,
+):
 
     """
     Wrapper to calculate MTR maps with B1 inhomogeneity correction
@@ -233,45 +245,53 @@ def process_mtr_b1(fp_dict, fa60_fp, fa120_fp, res_ref_fp, out_dir, to_delete,
     """
 
     if not quiet:
-        print('** resampling MT on and off data to dimensions of %s'
-              % res_ref_fp)
+        print("** resampling MT on and off data to dimensions of %s" % res_ref_fp)
 
-    fp_dict, to_delete = preproc.resample(fp_dict, res_ref_fp, out_dir,
-                                          to_delete, fsldir, quiet)
+    fp_dict, to_delete = preproc.resample(
+        fp_dict, res_ref_fp, out_dir, to_delete, fsldir, quiet
+    )
 
     if not quiet:
-        print('** calculating MTR map')
+        print("** calculating MTR map")
 
     mtr_fp = mtr.process_mtr(fp_dict, out_dir)
 
     if not quiet:
-        print('** cropping double-angle spin-echo images for B1 map to central '
-              'slices to match coverage of %s' % res_ref_fp)
+        print(
+            "** cropping double-angle spin-echo images for B1 map to central "
+            "slices to match coverage of %s" % res_ref_fp
+        )
 
-    fa_fp_dict = {'fa60_fp': fa60_fp, 'fa120_fp': fa120_fp}
-    fa_fp_dict, to_delete = preproc.crop(fa_fp_dict, [0, -1, 0, -1, 10, 20], out_dir,
-                                 to_delete, fsldir, quiet)
+    fa_fp_dict = {"fa60_fp": fa60_fp, "fa120_fp": fa120_fp}
+    fa_fp_dict, to_delete = preproc.crop(
+        fa_fp_dict, [0, -1, 0, -1, 10, 20], out_dir, to_delete, fsldir, quiet
+    )
 
     if not quiet:
-        print('** resampling double-angle spin-echo images for B1 map to '
-              'dimensions of %s' % res_ref_fp)
+        print(
+            "** resampling double-angle spin-echo images for B1 map to "
+            "dimensions of %s" % res_ref_fp
+        )
 
-    fa_fp_dict, to_delete = preproc.resample(fa_fp_dict, res_ref_fp, out_dir, to_delete,
-                                     fsldir, quiet)
+    fa_fp_dict, to_delete = preproc.resample(
+        fa_fp_dict, res_ref_fp, out_dir, to_delete, fsldir, quiet
+    )
     if not quiet:
-        print('** calculating B1 map')
+        print("** calculating B1 map")
     b1_fp = b1.process_b1(fa_fp_dict, out_dir, quiet)
 
     if not quiet:
-        print('** creating a mask by thresholding %s' % res_ref_fp)
+        print("** creating a mask by thresholding %s" % res_ref_fp)
 
-    bgmask_fp, to_delete = preproc.create_mask(res_ref_fp, out_dir, to_delete, fsldir,
-                                       quiet)
+    bgmask_fp, to_delete = preproc.create_mask(
+        res_ref_fp, out_dir, to_delete, fsldir, quiet
+    )
 
     if not quiet:
-        print('** correcting MTR map for B1 errors')
+        print("** correcting MTR map for B1 errors")
 
-    mtr_b1pcf_fp, mtr_b1scf_fp = process_b1_correction(mtr_fp, b1_fp, bgmask_fp,
-                                                       out_dir, b1pcf, quiet)
+    mtr_b1pcf_fp, mtr_b1scf_fp = process_b1_correction(
+        mtr_fp, b1_fp, bgmask_fp, out_dir, b1pcf, quiet
+    )
 
     return [mtr_fp, mtr_b1pcf_fp, mtr_b1scf_fp], to_delete

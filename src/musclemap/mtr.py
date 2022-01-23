@@ -14,7 +14,7 @@ def calc_mtr(mt_on, mt_off):
     :rtype: np.ndarray
     """
 
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         mtr = 100.0 * np.divide((mt_off - mt_on), mt_off)
         mtr = np.nan_to_num(mtr, copy=False, posinf=0.0, neginf=0.0)
 
@@ -36,18 +36,18 @@ def process_mtr(fp_dict, out_dir, quiet=True):
     """
 
     if not quiet:
-        print('** loading NIfTI image data')
-    mt_on = nib.load(str(fp_dict['mt_on_fp'])).get_fdata()
-    mt_off = nib.load(str(fp_dict['mt_off_fp'])).get_fdata()
-    affine_out = nib.load(str(fp_dict['mt_on_fp'])).header.get_best_affine()
+        print("** loading NIfTI image data")
+    mt_on = nib.load(str(fp_dict["mt_on_fp"])).get_fdata()
+    mt_off = nib.load(str(fp_dict["mt_off_fp"])).get_fdata()
+    affine_out = nib.load(str(fp_dict["mt_on_fp"])).header.get_best_affine()
 
     if not quiet:
-        print('** calculating MTR')
+        print("** calculating MTR")
     mtr = calc_mtr(mt_on, mt_off)
 
     if not quiet:
-        print('** saving NIfTI file')
-    mtr_fp = out_dir / 'mtr.nii.gz'
+        print("** saving NIfTI file")
+    mtr_fp = out_dir / "mtr.nii.gz"
     mtr_obj = nib.nifti1.Nifti1Image(mtr, affine_out)
     mtr_obj.to_filename(str(mtr_fp))
 
