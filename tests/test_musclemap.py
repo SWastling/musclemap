@@ -110,7 +110,7 @@ def test_musclemap_b1(tmp_path, script_runner):
     ref_b1_fp = output_dir / "b1.nii.gz"
 
     result = script_runner.run(
-        SCRIPT_NAME, "-o", str(tmp_path), "b1", fa60_fp, fa120_fp
+        SCRIPT_NAME, "-o", str(tmp_path), "b1", str(fa60_fp), str(fa120_fp)
     )
     assert not result.success
 
@@ -132,7 +132,7 @@ def test_musclemap_b1_reg(tmp_path, script_runner):
     ref_b1_fp = output_dir / "b1_r.nii.gz"
 
     result = script_runner.run(
-        SCRIPT_NAME, "-r", "-o", str(tmp_path), "b1", fa60_fp, fa120_fp
+        SCRIPT_NAME, "-r", "-o", str(tmp_path), "b1", str(fa60_fp), str(fa120_fp)
     )
     assert not result.success
 
@@ -155,7 +155,14 @@ def test_musclemap_b1_mask(tmp_path, script_runner):
     ref_b1_fp = output_dir / "b1_m.nii.gz"
 
     result = script_runner.run(
-        SCRIPT_NAME, "-m", mask_fp, "-o", str(tmp_path), "b1", fa60_fp, fa120_fp
+        SCRIPT_NAME,
+        "-m",
+        mask_fp,
+        "-o",
+        str(tmp_path),
+        "b1",
+        str(fa60_fp),
+        str(fa120_fp),
     )
     assert not result.success
 
@@ -188,8 +195,8 @@ def test_musclemap_b1_crop(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "b1",
-        fa60_fp,
-        fa120_fp,
+        str(fa60_fp),
+        str(fa120_fp),
     )
     assert not result.success
 
@@ -221,12 +228,12 @@ def test_musclemap_ff_thigh(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "ff",
-        mminus1_fp,
-        phiminus1_fp,
-        m0_fp,
-        phi0_fp,
-        m1_fp,
-        phi1_fp,
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
         "siemens",
         "-s",
     )
@@ -263,14 +270,14 @@ def test_musclemap_ff_hand_reg(tmp_path, script_runner):
         SCRIPT_NAME,
         "-r",
         "-o",
-        tmp_path,
+        str(tmp_path),
         "ff",
-        mminus1_fp,
-        phiminus1_fp,
-        m0_fp,
-        phi0_fp,
-        m1_fp,
-        phi1_fp,
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
         "siemens",
     )
     assert not result.success
@@ -307,12 +314,12 @@ def test_musclemap_ff_foot(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "ff",
-        mminus1_fp,
-        phiminus1_fp,
-        m0_fp,
-        phi0_fp,
-        m1_fp,
-        phi1_fp,
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
         "siemens",
     )
     assert not result.success
@@ -349,12 +356,12 @@ def test_musclemap_ff_calf3d(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "ff",
-        mminus1_fp,
-        phiminus1_fp,
-        m0_fp,
-        phi0_fp,
-        m1_fp,
-        phi1_fp,
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
         "siemens",
         "-s",
     )
@@ -399,12 +406,12 @@ def test_musclemap_ff_thigh_ge(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "ff",
-        mminus1_fp,
-        phiminus1_fp,
-        m0_fp,
-        phi0_fp,
-        m1_fp,
-        phi1_fp,
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
         "ge",
         "-s",
     )
@@ -452,12 +459,12 @@ def test_musclemap_ff_thigh_intermed(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "ff",
-        mminus1_fp,
-        phiminus1_fp,
-        m0_fp,
-        phi0_fp,
-        m1_fp,
-        phi1_fp,
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
         "siemens",
         "-s",
         "-nb",
@@ -505,7 +512,7 @@ def test_musclemap_mtr_1(tmp_path, script_runner):
     ref_mtr_fp = output_dir / "mtr.nii.gz"
 
     result = script_runner.run(
-        SCRIPT_NAME, "-o", str(tmp_path), "mtr", mt_on_fp, mt_off_fp
+        SCRIPT_NAME, "-o", str(tmp_path), "mtr", str(mt_on_fp), str(mt_off_fp)
     )
     assert not result.success
 
@@ -537,11 +544,11 @@ def test_musclemap_mtr_b1(tmp_path, script_runner):
         "-o",
         str(tmp_path),
         "mtr-b1",
-        mt_on_fp,
-        mt_off_fp,
-        fa60_fp,
-        fa120_fp,
-        res_ref_fp,
+        str(mt_on_fp),
+        str(mt_off_fp),
+        str(fa60_fp),
+        str(fa120_fp),
+        str(res_ref_fp),
     )
     assert not result.success
 
@@ -573,7 +580,15 @@ def test_musclemap_t2(tmp_path, script_runner):
     mask_fp = output_dir / "mask.nii.gz"
 
     result = script_runner.run(
-        SCRIPT_NAME, "-o", str(tmp_path), "t2", e1_fp, e2_fp, "16.0", "56.0", reg_ref_fp
+        SCRIPT_NAME,
+        "-o",
+        str(tmp_path),
+        "t2",
+        str(e1_fp),
+        str(e2_fp),
+        "16.0",
+        "56.0",
+        str(reg_ref_fp),
     )
     assert not result.success
 
