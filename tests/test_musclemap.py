@@ -1,5 +1,4 @@
 import pathlib
-import subprocess as sp
 
 import nibabel as nib
 import numpy as np
@@ -155,7 +154,7 @@ def test_musclemap_b1_mask(tmp_path, script_runner):
     ref_b1_fp = output_dir / "b1_m.nii.gz"
 
     result = script_runner.run(
-        SCRIPT_NAME, "-m", "-o", str(tmp_path), "b1", fa60_fp, fa120_fp
+        SCRIPT_NAME, "-m", mask_fp, "-o", str(tmp_path), "b1", fa60_fp, fa120_fp
     )
     assert not result.success
 
@@ -173,7 +172,6 @@ def test_musclemap_b1_crop(tmp_path, script_runner):
 
     fa60_fp = input_dir / "se_fa060.nii.gz"
     fa120_fp = input_dir / "se_fa120.nii.gz"
-    mask_fp = input_dir / "mask.nii.gz"
 
     ref_b1_fp = output_dir / "b1_c.nii.gz"
 

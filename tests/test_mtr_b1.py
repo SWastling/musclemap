@@ -198,7 +198,6 @@ def test_process_b1_correction(tmp_path):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / "mtr-b1"
-    input_dir = data_dir / "input"
     output_dir = data_dir / "output"
 
     mtr_fp = output_dir / "mtr.nii.gz"
