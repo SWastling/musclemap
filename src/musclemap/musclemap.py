@@ -97,7 +97,7 @@ def main():
     parser_ff = subparsers.add_parser(
         "ff",
         help="ff help",
-        description="calculate fat fraction maps " "from three-point Dixon data",
+        description="calculate fat fraction maps from three-point Dixon data",
     )
 
     parser_mtr = subparsers.add_parser(
@@ -319,8 +319,8 @@ def main():
 
         dr = [0.0, 100.0]
 
-    elif args.algorithm == "t2":
-
+    else:
+        # t2
         fp_dict = {"e1_fp": args.e1, "e2_fp": args.e2}
 
         ref_fp = fp_dict["e1_fp"]
@@ -431,8 +431,8 @@ def main():
             args.b1pcf,
             args.quiet,
         )
-
-    elif args.algorithm == "t2":
+    else:
+        # t2
         if not args.quiet:
             print("* calculating T2 map")
         map_fp, delete_list = t2.process_t2(
@@ -476,5 +476,5 @@ def main():
         sp.Popen(fsleyes_cmd, stderr=sp.PIPE, stdout=sp.PIPE)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

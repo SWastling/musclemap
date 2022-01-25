@@ -93,6 +93,11 @@ def test_scale_phase(phase, scanner, expected_output):
     assert np.allclose(ff.scale_phase(phase, scanner), expected_output)
 
 
+def test_scale_phase_error():
+    with pytest.raises(ValueError):
+        ff.scale_phase(np.array([1000.0, 2000.0, -1000.0, 200.0]), "varian")
+
+
 @pytest.mark.parametrize(
     "mag, phase, expected_output",
     [
@@ -299,6 +304,38 @@ def test_process_ff(tmp_path):
 
     ff_fp, to_delete = ff.process_ff(
         fp_dict, tmp_path, [], FSL_DIR, False, "siemens", True, False
+    )
+
+    assert perror(ref_ff_fp, ff_fp) < pthresh
+
+
+def test_process_ff_nb_quiet(tmp_path):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/siemens/thigh"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mminus1_fp = input_dir / "0006-Dixon_TE_345_th.nii.gz"
+    phiminus1_fp = input_dir / "0007-Dixon_TE_345_th.nii.gz"
+    m0_fp = input_dir / "0008-Dixon_TE_460_th.nii.gz"
+    phi0_fp = input_dir / "0009-Dixon_TE_460_th.nii.gz"
+    m1_fp = input_dir / "0010-Dixon_TE_575_th.nii.gz"
+    phi1_fp = input_dir / "0011-Dixon_TE_575_th.nii.gz"
+
+    fp_dict = {
+        "mminus1_fp": mminus1_fp,
+        "phiminus1_fp": phiminus1_fp,
+        "m0_fp": m0_fp,
+        "phi0_fp": phi0_fp,
+        "m1_fp": m1_fp,
+        "phi1_fp": phi1_fp,
+    }
+
+    ref_ff_fp = output_dir / "fatfraction.nii.gz"
+
+    ff_fp, to_delete = ff.process_ff(
+        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", True
     )
 
     assert perror(ref_ff_fp, ff_fp) < pthresh

@@ -188,6 +188,23 @@ def test_register(tmp_path):
     assert perror(ref_reg_fp, fp_dict["fa120_fp"]) < pthresh
 
 
+def test_register_quiet(tmp_path):
+    pthresh = 1.0
+
+    fa60_fp = TEST_DATA_DIR / "b1" / "input" / "se_fa060.nii.gz"
+    fa120_fp = TEST_DATA_DIR / "b1" / "input" / "se_fa120.nii.gz"
+    ref_reg_fp = TEST_DATA_DIR / "b1" / "output" / "se_fa120_r.nii.gz"
+
+    fp_dict = {"fa60_fp": fa60_fp, "fa120_fp": fa120_fp}
+
+    fp_dict, to_delete = preproc.register(
+        fp_dict, fp_dict["fa60_fp"], tmp_path, [], FSL_DIR
+    )
+
+    assert to_delete == [fp_dict["fa120_fp"]]
+    assert perror(ref_reg_fp, fp_dict["fa120_fp"]) < pthresh
+
+
 def test_register_dixon(tmp_path):
     pthresh = 1.0
 
@@ -278,6 +295,31 @@ def test_mask(tmp_path):
     fp_ref_dict = {"mminus1_fp": mminus1_ref_fp, "phiminus1_fp": phiminus1_ref_fp}
 
     fp_dict, to_delete = preproc.mask(fp_dict, mask_fp, tmp_path, [], FSL_DIR, False)
+
+    for key in fp_dict:
+        assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+
+
+def test_mask_quiet(tmp_path):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/ge/thigh_masked"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mask_fp = input_dir / "mask.nii.gz"
+
+    mminus1_fp = input_dir / "40006-ORIG_DIXON_TE_345_TH-0000.nii.gz"
+    phiminus1_fp = input_dir / "40006-ORIG_DIXON_TE_345_TH-0001.nii.gz"
+
+    fp_dict = {"mminus1_fp": mminus1_fp, "phiminus1_fp": phiminus1_fp}
+
+    mminus1_ref_fp = output_dir / "40006-ORIG_DIXON_TE_345_TH-0000_m.nii.gz"
+    phiminus1_ref_fp = output_dir / "40006-ORIG_DIXON_TE_345_TH-0001_m.nii.gz"
+
+    fp_ref_dict = {"mminus1_fp": mminus1_ref_fp, "phiminus1_fp": phiminus1_ref_fp}
+
+    fp_dict, to_delete = preproc.mask(fp_dict, mask_fp, tmp_path, [], FSL_DIR)
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh

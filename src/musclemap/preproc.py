@@ -459,32 +459,29 @@ def resample(fp_dict, ref_fp, out_dir, to_delete, fsldir, quiet=True):
     unity_xform_fp.write_text("1 0 0 0 \n0 1 0 0 \n0 0 1 0 \n0 0 0 1")
 
     for key, fp in fp_dict.items():
-        if fp == ref_fp:
-            continue
-        else:
-            out_fn = remove_file_ext(fp).name + "_resamp.nii.gz"
-            out_fp = out_dir / out_fn
+        out_fn = remove_file_ext(fp).name + "_resamp.nii.gz"
+        out_fp = out_dir / out_fn
 
-            flirt_cmd = [
-                str(fsldir / "bin" / "flirt"),
-                "-in",
-                str(fp),
-                "-ref",
-                str(ref_fp),
-                "-out",
-                str(out_fp),
-                "-applyxfm",
-                "-init",
-                str(unity_xform_fp),
-            ]
+        flirt_cmd = [
+            str(fsldir / "bin" / "flirt"),
+            "-in",
+            str(fp),
+            "-ref",
+            str(ref_fp),
+            "-out",
+            str(out_fp),
+            "-applyxfm",
+            "-init",
+            str(unity_xform_fp),
+        ]
 
-            if not quiet:
-                print("***", " ".join(flirt_cmd))
+        if not quiet:
+            print("***", " ".join(flirt_cmd))
 
-            # Capture the output from flirt as user doesn't need to see it
-            sp.run(flirt_cmd, check=True, text=True, capture_output=True)
+        # Capture the output from flirt as user doesn't need to see it
+        sp.run(flirt_cmd, check=True, text=True, capture_output=True)
 
-            fp_dict[key] = out_fp
+        fp_dict[key] = out_fp
 
     to_delete.extend([unity_xform_fp, out_fp])
 

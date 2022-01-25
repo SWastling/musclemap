@@ -18,6 +18,8 @@ def scale_phase(phase, scanner):
         sf = np.pi / 2048.0
     elif scanner == "ge":
         sf = 1.0 / 1000.0
+    else:
+        raise ValueError("scanner must be either siemens or ge")
 
     return phase * sf
 
@@ -86,7 +88,7 @@ def unwrap(phim_fp, phim_shape, m0_fp, out_dir, to_delete, split, fsldir, quiet=
             if side == "left":
                 startx = "0"
                 sizex = str(halfx)
-            elif side == "right":
+            else:
                 startx = str(halfx)
                 sizex = "-1"
 
