@@ -171,6 +171,30 @@ def test_remove_file_ext(fp, expected_output):
     assert preproc.remove_file_ext(fp) == expected_output
 
 
+def test_unscale(tmp_path):
+
+    ph_fp = (
+        TEST_DATA_DIR
+        / "ff"
+        / "philips"
+        / "thigh_dcm2niix"
+        / "input"
+        / "1801-Dixon_TE_345_th_ph.nii"
+    )
+    fp_dict = {"ph_fp": ph_fp}
+
+    nii_test_in = nib.load(str(fp_dict["ph_fp"]))
+    assert nii_test_in.dataobj.slope != 1
+    assert nii_test_in.dataobj.inter != 0
+
+    fp_dict, to_delete = preproc.unscale(fp_dict, tmp_path, [])
+    assert to_delete == [fp_dict["ph_fp"]]
+
+    nii_test_out = nib.load(str(fp_dict["ph_fp"]))
+    assert nii_test_out.dataobj.slope == 1
+    assert nii_test_out.dataobj.inter == 0
+
+
 def test_register(tmp_path):
     pthresh = 1.0
 

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [release-1.1.0](https://github.com/SWastling/dcmsort/tree/release-1.1.0) - 2022-07-15
+
+### Added
+
+- Added ability to process fat-fraction data from Philips MRI systems
+
+### Changed
+
+- Updated README 
+
 ## [release-1.0.1](https://github.com/SWastling/dcmsort/tree/release-1.0.1) - 2022-01-25
 
 ### Changed

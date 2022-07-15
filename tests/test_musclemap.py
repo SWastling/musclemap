@@ -519,6 +519,108 @@ def test_musclemap_ff_thigh_ge(tmp_path, script_runner):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
+def test_musclemap_ff_thigh_philips_volconv(tmp_path, script_runner):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/philips/thigh_volconv"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    # scl_slope and scl_inter are 1 and 0
+    mminus1_fp = input_dir / "1801a-Dixon_TE_345_th.nii"
+    phiminus1_fp = input_dir / "1801b-Dixon_TE_345_th.nii"
+    m0_fp = input_dir / "2101a-Dixon_TE_460_th.nii"
+    phi0_fp = input_dir / "2101b-Dixon_TE_460_th.nii"
+    m1_fp = input_dir / "2401a-Dixon_TE_575_th.nii"
+    phi1_fp = input_dir / "2401b-Dixon_TE_575_th.nii"
+
+    ref_ff_fp = output_dir / "fatfraction.nii.gz"
+    ref_f_fp = output_dir / "fat.nii.gz"
+    ref_w_fp = output_dir / "water.nii.gz"
+
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-c",
+        "0",
+        "-1",
+        "128",
+        "256",
+        "0",
+        "-1",
+        "-o",
+        str(tmp_path),
+        "ff",
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
+        "philips",
+        "-s",
+    )
+    assert result.success
+
+    ff_fp = tmp_path / "fatfraction.nii.gz"
+    f_fp = tmp_path / "fat.nii.gz"
+    w_fp = tmp_path / "water.nii.gz"
+
+    assert perror(ref_ff_fp, ff_fp) < pthresh
+    assert perror(ref_f_fp, f_fp) < pthresh
+    assert perror(ref_w_fp, w_fp) < pthresh
+
+
+def test_musclemap_ff_thigh_philips_dcm2niix(tmp_path, script_runner):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/philips/thigh_dcm2niix"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    # scl_slope and scl_inter are 1 and 0
+    mminus1_fp = input_dir / "1801-Dixon_TE_345_th.nii"
+    phiminus1_fp = input_dir / "1801-Dixon_TE_345_th_ph.nii"
+    m0_fp = input_dir / "2101-Dixon_TE_460_th.nii"
+    phi0_fp = input_dir / "2101-Dixon_TE_460_th_ph.nii"
+    m1_fp = input_dir / "2401-Dixon_TE_575_th.nii"
+    phi1_fp = input_dir / "2401-Dixon_TE_575_th_ph.nii"
+
+    ref_ff_fp = output_dir / "fatfraction.nii.gz"
+    ref_f_fp = output_dir / "fat.nii.gz"
+    ref_w_fp = output_dir / "water.nii.gz"
+
+    result = script_runner.run(
+        SCRIPT_NAME,
+        "-c",
+        "0",
+        "-1",
+        "128",
+        "256",
+        "0",
+        "-1",
+        "-o",
+        str(tmp_path),
+        "ff",
+        str(mminus1_fp),
+        str(phiminus1_fp),
+        str(m0_fp),
+        str(phi0_fp),
+        str(m1_fp),
+        str(phi1_fp),
+        "philips",
+        "-s",
+    )
+    assert result.success
+
+    ff_fp = tmp_path / "fatfraction.nii.gz"
+    f_fp = tmp_path / "fat.nii.gz"
+    w_fp = tmp_path / "water.nii.gz"
+
+    assert perror(ref_ff_fp, ff_fp) < pthresh
+    assert perror(ref_f_fp, f_fp) < pthresh
+    assert perror(ref_w_fp, w_fp) < pthresh
+
+
 def test_musclemap_ff_thigh_intermed(tmp_path, script_runner):
     pthresh = 1.0
 

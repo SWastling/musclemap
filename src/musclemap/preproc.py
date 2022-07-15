@@ -64,6 +64,38 @@ def remove_file_ext(fp):
     return fp
 
 
+def unscale(fp_dict, out_dir, to_delete):
+
+    """
+    Set scl_slope and scl_inter to 1 and 0 in NIfTI header
+
+    :param fp_dict: dictionary of NIfTI files
+    :type fp_dict: dict
+    :param out_dir: output directory
+    :type out_dir: pathlib.Path
+    :param to_delete: intermediate files to delete
+    :type to_delete: list
+    :return: fp_dict, to_delete
+    :rtype: tuple
+    """
+
+    for key, fp in fp_dict.items():
+        out_fn = remove_file_ext(fp).name + "_us.nii.gz"
+        out_fp = out_dir / out_fn
+        to_delete.append(out_fp)
+
+        nii_obj = nib.load(str(fp))
+        affine = nii_obj.header.get_best_affine()
+        unscaled_data = nii_obj.dataobj.get_unscaled()
+
+        out_nii_obj = nib.nifti1.Nifti1Image(unscaled_data, affine)
+        out_nii_obj.to_filename(str(out_fp))
+
+        fp_dict[key] = out_fp
+
+    return fp_dict, to_delete
+
+
 def register(fp_dict, ref_fp, out_dir, to_delete, fsldir, quiet=True):
     """
     Register a set of NIfTI files to a reference with FSL flirt

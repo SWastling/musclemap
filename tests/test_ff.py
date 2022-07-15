@@ -87,6 +87,11 @@ def test_perror(ref_fp, test_fp, expected_output):
             "siemens",
             np.array([np.pi, 2.0 * np.pi, -np.pi, 0.5 * np.pi]),
         ),
+        (
+            np.array([2047.5, 4095.0, -2047.5, 1023.75]),
+            "philips",
+            np.array([np.pi, 2.0 * np.pi, -np.pi, 0.5 * np.pi]),
+        ),
     ],
 )
 def test_scale_phase(phase, scanner, expected_output):

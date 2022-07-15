@@ -171,7 +171,7 @@ def main():
         "scanner",
         metavar="scanner",
         type=str,
-        choices=["ge", "siemens"],
+        choices=["ge", "siemens", "philips"],
         help="scanner type, chose from {%(choices)s}",
     )
 
@@ -361,6 +361,10 @@ def main():
     preproc.check_shape_and_orientation(fp_dict, ref_fp)
 
     # Pre-processing - register, crop and mask
+
+    if args.algorithm == "ff":
+        fp_dict, to_delete = preproc.unscale(fp_dict, out_dir, to_delete)
+
     if args.r:
         if not args.quiet:
             print("** registering images to %s with fsl flirt" % ref_fp)

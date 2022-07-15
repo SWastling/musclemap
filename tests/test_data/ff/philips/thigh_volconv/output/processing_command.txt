@@ -1,0 +1,1 @@
+../../../../../.tox/py37/bin/musclemap -v -c 0 -1 128 256 0 -1 -o output/ ff input/1801a-Dixon_TE_345_th.nii input/1801b-Dixon_TE_345_th.nii input/2101a-Dixon_TE_460_th.nii input/2101b-Dixon_TE_460_th.nii input/2401a-Dixon_TE_575_th.nii input/2401b-Dixon_TE_575_th.nii philips -s

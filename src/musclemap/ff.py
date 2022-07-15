@@ -10,7 +10,7 @@ def scale_phase(phase, scanner):
 
     :param phase: Phase in scanner units
     :type phase: float or np.ndarray
-    :param scanner: scanner type {ge, siemens}
+    :param scanner: scanner type {ge, siemens, philips}
     :type scanner: str
     :return: phase in radians
     """
@@ -18,8 +18,10 @@ def scale_phase(phase, scanner):
         sf = np.pi / 2048.0
     elif scanner == "ge":
         sf = 1.0 / 1000.0
+    elif scanner == "philips":
+        sf = np.pi / 2047.5
     else:
-        raise ValueError("scanner must be either siemens or ge")
+        raise ValueError("scanner must be either ge, siemens or philips")
 
     return phase * sf
 
@@ -319,12 +321,20 @@ def process_ff(
 
     if not quiet:
         print("** loading NIfTI image data")
-    mminus1 = nib.load(str(fp_dict["mminus1_fp"])).get_fdata()
-    phiminus1 = nib.load(str(fp_dict["phiminus1_fp"])).get_fdata()
-    m0 = nib.load(str(fp_dict["m0_fp"])).get_fdata()
-    phi0 = nib.load(str(fp_dict["phi0_fp"])).get_fdata()
-    m1 = nib.load(str(fp_dict["m1_fp"])).get_fdata()
-    phi1 = nib.load(str(fp_dict["phi1_fp"])).get_fdata()
+    mminus1_nii = nib.load(str(fp_dict["mminus1_fp"]))
+    phiminus1_nii = nib.load(str(fp_dict["phiminus1_fp"]))
+    m0_nii = nib.load(str(fp_dict["m0_fp"]))
+    phi0_nii = nib.load(str(fp_dict["phi0_fp"]))
+    m1_nii = nib.load(str(fp_dict["m1_fp"]))
+    phi1_nii = nib.load(str(fp_dict["phi1_fp"]))
+
+    # get raw array data without application of scl_slope and scl_inter
+    mminus1 = mminus1_nii.dataobj.get_unscaled()
+    phiminus1 = phiminus1_nii.dataobj.get_unscaled()
+    m0 = m0_nii.dataobj.get_unscaled()
+    phi0 = phi0_nii.dataobj.get_unscaled()
+    m1 = m1_nii.dataobj.get_unscaled()
+    phi1 = phi1_nii.dataobj.get_unscaled()
 
     affine_out = nib.load(str(fp_dict["mminus1_fp"])).header.get_best_affine()
 

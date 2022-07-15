@@ -18,14 +18,16 @@ Calculate B1, fat-fraction, magnetisation transfer ratio or T2 maps
 
 Below is a list of available algorithms, the source files that they require,
 and a brief description of their behaviour:
- 
-- b1: calculate a B1 map from double-angle spin-echo data at 60&deg; and 
+
+### b1
+Calculate a B1 map from double-angle spin-echo data at 60&deg; and 
 120&deg;. Based on, but not identical to, equation 7 in Ropele et al. MRM 
 (2005). The result is expressed as a fraction of 60&deg;. Required source files:
     - `fa60`: 60&deg; flip-angle spin-echo NIfTI image
     - `fa120`: 120&deg; flip-angle spin-echo NIfTI image
-    
-- ff: calculate a fat-fraction map from the magnitude and phase data 
+
+### ff
+Calculate a fat-fraction map from the magnitude and phase data 
 acquired with fat and water out-of-phase, in-phase and then out-of-phase again. 
 Using the 3-point Dixon method described in Glover and Schneider MRM (1991). 
 Required source files and arguments:
@@ -35,14 +37,20 @@ Required source files and arguments:
     - `phi0`: in phase fat-water phase NIfTI image (TE 4.6 ms at 3 T)
     - `m1`: out-of-phase fat-water magnitude NIfTI image (TE 5.75 ms at 3 T)
     - `phi1`: out-of-phase fat-water phase NIfTI image (TE 5.75 ms at 3 T)
-    - `scanner`: scanner type, chose from `ge` or `siemens`
-    
-- mtr: calculate magnetisation transfer ratio (MTR) map from MT on and off data. 
+    - `scanner`: scanner type, chose from `ge`, `siemens` or `philips`
+
+_Note: The `scl_slope` and `scl_inter` NIfTI header elements are explicitly 
+ignored. For GE data the input phase images should be -3142:3142, for Siemens 
+and Philips data 0:4095. Phase images are scaled to radians internally._
+
+### mtr
+Calculate magnetisation transfer ratio (MTR) map from MT on and off data. 
 Required source files: 
     - `mt_on`: MT on magnitude NIfTI image
     - `mt_off`:  MT off magnitude NIfTI image
     
-- mtr-b1: calculate magnetisation transfer ratio (MTR) map from MT on and off 
+### mtr-b1
+Calculate magnetisation transfer ratio (MTR) map from MT on and off 
 data with correction for B1 inhomogeneities as described in Sinclair et al. NMR
 in Biomedicine 2012. Required source files: 
     - `mt_on`: MT on magnitude NIfTI image
@@ -52,7 +60,8 @@ in Biomedicine 2012. Required source files:
     - `ref`: reference NIfTI image used for masking and resampling typically  
     Dixon out-of-phase fat-water magnitude image (TE 3.45 ms at 3 T)
 
-- t2: calculate T2 map from double-echo spin-echo data. By default the maps are
+### t2
+Calculate T2 map from double-echo spin-echo data. By default the maps are
 registered to a reference image. Required source files and arguments:
     - `e1`: First echo NIfTI image
     - `e2`:  Second echo NIfTI image
