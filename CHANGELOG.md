@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [release-1.1.0](https://github.com/SWastling/dcmsort/tree/release-1.1.0) - 2022-07-15
+## [release-1.1.1](https://github.com/SWastling/musclemap/tree/release-1.1.1) - 2024-11-27
+
+### Changed
+
+- Switched from tox to uv and ruff 
+- Updated to Python 3.13
+
+## [release-1.1.0](https://github.com/SWastling/musclemap/tree/release-1.1.0) - 2022-07-15
 
 ### Added
 
@@ -12,7 +19,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated README 
 
-## [release-1.0.1](https://github.com/SWastling/dcmsort/tree/release-1.0.1) - 2022-01-25
+## [release-1.0.1](https://github.com/SWastling/musclemap/tree/release-1.0.1) - 2022-01-25
 
 ### Changed
 
@@ -30,6 +37,6 @@ virtual environment with package versions specified in the
 - Test coverage reports with [pytest-cov](https://pypi.org/project/pytest-cov/)
 - Further unit and integration tests to ensure 100% coverage
 
-## [release-1.0.0](https://github.com/SWastling/dcmsort/tree/release-1.0.0) - 2021-06-11
+## [release-1.0.0](https://github.com/SWastling/musclemap/tree/release-1.0.0) - 2021-06-11
 
 - Initial release of working, tested code
