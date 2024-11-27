@@ -7,7 +7,7 @@ import pathlib
 import subprocess as sp
 import sys
 
-import importlib_metadata as metadata
+import importlib.metadata
 
 import musclemap.b1 as b1
 import musclemap.config as config
@@ -18,10 +18,7 @@ import musclemap.preproc as preproc
 import musclemap.t2 as t2
 import musclemap.vercheck as vercheck
 
-try:
-    __version__ = metadata.version("musclemap")
-except metadata.PackageNotFoundError:  # pragma: no cover
-    __version__ = "unknown"
+__version__ = importlib.metadata.version("musclemap")
 
 
 def main():
