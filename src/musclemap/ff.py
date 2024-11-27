@@ -60,7 +60,6 @@ def calc_phim(z1, z2):
 
 
 def unwrap(phim_fp, phim_shape, m0_fp, out_dir, to_delete, split, fsldir, quiet=True):
-
     """
     Unwrap phase image using FSL prelude
 
@@ -294,7 +293,6 @@ def calc_ff_nb(sminus1prime, s0prime, s1prime, p):
 def process_ff(
     fp_dict, out_dir, to_delete, fsldir, noise_bias, scanner, split, quiet=True
 ):
-
     """
     Calculate fat-fraction map from 3 point Dixon data
 

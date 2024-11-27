@@ -8,13 +8,12 @@ import musclemap.vercheck as vercheck
 
 
 def test_get_fsldir(capsys, tmp_path):
-
     # Check appropriate error is thrown if FSLDIR not set
     with mock.patch.dict(os.environ, clear=True):
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             vercheck.get_fsldir()
 
-        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.type is SystemExit
         assert pytest_wrapped_e.value.code == 1
         captured = capsys.readouterr()
         assert captured.out == ""
@@ -30,7 +29,6 @@ def test_get_fsldir(capsys, tmp_path):
 
 
 def test_get_fsl_ver(tmp_path):
-
     assert vercheck.get_fsl_ver(vercheck.get_fsldir()) in config.FSL_VERSIONS
 
     # Make a mock fslversion file and check can read it
@@ -46,12 +44,11 @@ def test_get_fsl_ver(tmp_path):
 
 
 def test_check_lib_ver(capsys):
-
     # Library check fail and exit
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         vercheck.check_lib_ver("lib_a", "2.0.0", ["1.0.0", "1.0.1"], False)
 
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == 1
     captured = capsys.readouterr()
     assert (

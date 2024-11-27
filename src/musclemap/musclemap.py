@@ -271,7 +271,6 @@ def main():
         dr = [0.0, 2.0]
 
     elif args.algorithm == "ff":
-
         fp_dict = {
             "mminus1_fp": args.m_1,
             "phiminus1_fp": args.phi_1,
@@ -286,7 +285,6 @@ def main():
         dr = [0.0, 100.0]
 
     elif args.algorithm == "mtr":
-
         fp_dict = {"mt_on_fp": args.mt_on, "mt_off_fp": args.mt_off}
 
         ref_fp = fp_dict["mt_on_fp"]
@@ -294,7 +292,6 @@ def main():
         dr = [0.0, 100.0]
 
     elif args.algorithm == "mtr-b1":
-
         fp_dict = {"mt_on_fp": args.mt_on, "mt_off_fp": args.mt_off}
 
         ref_fp = fp_dict["mt_on_fp"]

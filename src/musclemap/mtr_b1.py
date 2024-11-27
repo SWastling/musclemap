@@ -53,7 +53,6 @@ def stderrs_from_covmat(covmat):
 
 
 def propagate_error_div(f, a, stderr_a, b, stderr_b):
-
     """
     Propagate errors for function f = a / b when the standard errors in a and b
     are known
@@ -142,7 +141,6 @@ def calc_b1scf(mtr_masked, b1_masked):
 
 
 def process_b1_correction(mtr_fp, b1_fp, bgmask_fp, out_dir, b1pcf, quiet=True):
-
     """
     Calculate and then apply B1 correction to MTR images
 
@@ -218,7 +216,6 @@ def process_mtr_b1(
     b1pcf,
     quiet=True,
 ):
-
     """
     Wrapper to calculate MTR maps with B1 inhomogeneity correction
     (as in IBM/CMT and IBM4809 projects)

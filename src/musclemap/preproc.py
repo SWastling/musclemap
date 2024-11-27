@@ -48,7 +48,6 @@ def check_shape_and_orientation(fp_dict, ref_fp):
 
 
 def remove_file_ext(fp):
-
     """
     Remove the extension(s) from the end of a filepath e.g. nii or nii.gz
 
@@ -65,7 +64,6 @@ def remove_file_ext(fp):
 
 
 def unscale(fp_dict, out_dir, to_delete):
-
     """
     Set scl_slope and scl_inter to 1 and 0 in NIfTI header
 
@@ -374,7 +372,6 @@ def register_t2(fp_dict, ref_fp, out_dir, to_delete, fsldir, quiet=True):
 
 
 def mask(fp_dict, mask_fp, out_dir, to_delete, fsldir, quiet=True):
-
     """
     Apply mask using fslmaths to a set of NIfTI files
 
@@ -419,7 +416,6 @@ def mask(fp_dict, mask_fp, out_dir, to_delete, fsldir, quiet=True):
 
 
 def crop(fp_dict, crop_dims, out_dir, to_delete, fsldir, quiet=True):
-
     """
     Crop a set of NIfTI files using fslroi
 
@@ -467,7 +463,6 @@ def crop(fp_dict, crop_dims, out_dir, to_delete, fsldir, quiet=True):
 
 
 def resample(fp_dict, ref_fp, out_dir, to_delete, fsldir, quiet=True):
-
     """
     Resample set of NIfTI files to reference space with FSL flirt
 

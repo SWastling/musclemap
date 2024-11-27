@@ -44,7 +44,6 @@ def calc_t2(e1, e2, te1, te2):
 
 
 def process_t2(fp_dict, te1, te2, reg_fp, out_dir, to_delete, fsldir, quiet=True):
-
     """
     Calculate T2 map from double-echo spin-echo data
 

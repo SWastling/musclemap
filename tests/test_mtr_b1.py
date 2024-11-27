@@ -101,14 +101,12 @@ def test_calc_b1pcf():
 
 
 def test_calc_b1_perc_err():
-
     b1_in = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2])
     expected_output = np.array([-90, -80, -70, -60, -50, -40, -30, -20, -10, 0, 10, 20])
     assert np.allclose(mtr_b1.calc_b1_perc_err(b1_in), expected_output)
 
 
 def test_stderrs_from_covmat():
-
     test_covmat = np.array([[4.0, 1.0, 0.0], [2.3, 9.0, 1.1], [0.0, 1.0, 16.0]])
     expected_output = [2.0, 3.0, 4.0]
     assert np.allclose(mtr_b1.stderrs_from_covmat(test_covmat), expected_output)
@@ -131,7 +129,6 @@ def test_apply_b1scf():
 
 
 def test_calc_b1scf():
-
     # MTR data generated in excel with mtr_true = 80, kspec = 0.09, with added
     # Gaussian noise with mean 0 and sd 1
     mtr = np.array(

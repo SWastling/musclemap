@@ -75,7 +75,6 @@ def test_perror(ref_fp, test_fp, expected_output):
 
 
 def test_check_files_exist_1(tmp_path, capsys):
-
     a_fp = tmp_path / "a"
     b_fp = tmp_path / "b"
 
@@ -91,7 +90,6 @@ def test_check_files_exist_1(tmp_path, capsys):
 
 
 def test_check_files_exist_2(tmp_path, capsys):
-
     a_fp = tmp_path / "a"
     b_fp = tmp_path / "b"
     test_fp_dict = {"a_fp": a_fp, "b_fp": b_fp}
@@ -99,7 +97,7 @@ def test_check_files_exist_2(tmp_path, capsys):
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         preproc.check_files_exist(test_fp_dict)
 
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == 1
 
     captured = capsys.readouterr()
@@ -108,7 +106,6 @@ def test_check_files_exist_2(tmp_path, capsys):
 
 
 def test_check_shape_and_orientation_1(capsys):
-
     data_dir = TEST_DATA_DIR / "b1/input"
     a_fp = data_dir / "se_fa060.nii.gz"
     b_fp = data_dir / "se_fa120.nii.gz"
@@ -132,7 +129,7 @@ def test_check_shape_and_orientation_2(capsys):
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         preproc.check_shape_and_orientation(fp_dict, ref_fp)
 
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == 1
 
     captured = capsys.readouterr()
@@ -151,7 +148,7 @@ def test_check_shape_and_orientation_3(capsys):
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         preproc.check_shape_and_orientation(fp_dict, ref_fp)
 
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == 1
 
     captured = capsys.readouterr()
@@ -172,7 +169,6 @@ def test_remove_file_ext(fp, expected_output):
 
 
 def test_unscale(tmp_path):
-
     ph_fp = (
         TEST_DATA_DIR
         / "ff"
@@ -273,7 +269,6 @@ def test_register_dixon(tmp_path):
 
 
 def test_register_t2(tmp_path):
-
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / "t2"
@@ -350,7 +345,6 @@ def test_mask_quiet(tmp_path):
 
 
 def test_crop(tmp_path):
-
     pthresh = 1.0
     crop_dims = [0, 56, 0, -1, 0, -1]
 
