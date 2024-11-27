@@ -10,7 +10,7 @@ musclemap [general options] [algorithm] [algorithm options] [source files]
 ```
 
 - `source files`: The image(s) containing the source data. The types of image 
-data required depends on the algorithm used (see Description section below).
+data required depend on the algorithm used (see Description section below).
 
 
 ## Description
@@ -39,9 +39,10 @@ Required source files and arguments:
     - `phi1`: out-of-phase fat-water phase NIfTI image (TE 5.75 ms at 3 T)
     - `scanner`: scanner type, chose from `ge`, `siemens` or `philips`
 
-_Note: The `scl_slope` and `scl_inter` NIfTI header elements are explicitly 
-ignored. For GE data the input phase images should be -3142:3142, for Siemens 
-and Philips data 0:4095. Phase images are scaled to radians internally._
+> [!NOTE] 
+> The `scl_slope` and `scl_inter` NIfTI header elements are explicitly 
+> ignored. For GE data the input phase images should be -3142:3142, for Siemens 
+> and Philips data 0:4095. Phase images are scaled to radians internally.
 
 ### mtr
 Calculate magnetisation transfer ratio (MTR) map from MT on and off data. 
@@ -69,9 +70,6 @@ registered to a reference image. Required source files and arguments:
     - `te2`: echo time of second echo (ms)
     - `ref`: reference NIfTI image used for registration typically Dixon 
     out-of-phase fat-water magnitude image (TE 3.45 ms at 3 T)
-
-The version of `musclemap`, as stored by `git`, and of `FSL` and the `nibabel` 
-library are verified at runtime
 
 ## Options
 
@@ -103,36 +101,30 @@ straight line fit of B1 to MTR (default=0.0085)
 
 - [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) (version 6.0.3 or 6.0.4)
 
+> [!NOTE] 
+> The version of `FSL` is verified at runtime.
 ## Installing
-1. Create a directory to store the package e.g.:
+1. Create a new virtual environment in which to install `musclemap`:
 
     ```bash
-    mkdir musclemap
-    ```
-
-2. Create a new virtual environment in which to install `musclemap`:
-
-    ```bash
-    python3 -m venv musclemap-env
+    uv venv musclemap-venv
     ```
    
-3. Activate the virtual environment:
+2. Activate the virtual environment:
 
     ```bash
-    source musclemap-env/bin/activate
+    source musclemap-venv/bin/activate
     ```
 
-4. Upgrade `pip` and `build`:
-
+4. Install using `uv pip`:
     ```bash
-    pip install --upgrade pip
-    pip install --upgrade build
+    uv pip install git+https://github.com/SWastling/musclemap.git
     ```
-
-5. Install using `pip`:
-    ```bash
-    pip install git+https://github.com/SWastling/musclemap.git
-    ```
+   
+> [!TIP]
+> You can also run `musclemap` without installing it using 
+>[uvx](https://docs.astral.sh/uv/guides/tools/) i.e. with the command 
+>`uvx --from  git+https://github.com/SWastling/musclemap.git musclemap`
 
 ## License
 See [MIT license](./LICENSE)
@@ -140,9 +132,7 @@ See [MIT license](./LICENSE)
 ## Authors and Acknowledgements
 Dr Stephen Wastling 
 ([stephen.wastling@nhs.net](mailto:stephen.wastling@nhs.net)) based on a 
-collection of scripts written in Python 2 by Chris Sinclair. This initial 
-release was tested against the previous implementations of the code to ensure 
-it produced identical results. 
+collection of Python 2 scripts written by Chris Sinclair.  
 
 ## References
 1. Ropele et al. _Assessment and Correction of B1 Induced Errors in 
