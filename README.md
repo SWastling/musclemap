@@ -47,29 +47,30 @@ The source files and arguments required are:
 ### mtr
 Calculate magnetisation transfer ratio (MTR) map from MT on and off data. 
 The source files required are:
-- `mt_on`: MT on magnitude NIfTI image
-- `mt_off`:  MT off magnitude NIfTI image
+- `mt_on`: MT on magnitude image
+- `mt_off`:  MT off magnitude image
     
 ### mtr-b1
 Calculate magnetisation transfer ratio (MTR) map from MT on and off 
 data with correction for B1 inhomogeneities as described in [Sinclair et al. NMR
-in Biomedicine 2012](https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/10.1002/nbm.1744). 
+in Biomedicine (2012)](https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/10.1002/nbm.1744). 
 The source files required are:
-- `mt_on`: MT on magnitude NIfTI image
-- `mt_off`:  MT off magnitude NIfTI image
-- `fa60`: 60&deg; flip-angle spin-echo NIfTI image
-- `fa120`: 120&deg; flip-angle spin-echo NIfTI image
-- `ref`: reference NIfTI image used for masking and resampling typically Dixon out-of-phase fat-water magnitude image (TE 3.45 ms at 3 T)
+- `mt_on`: MT on magnitude image
+- `mt_off`:  MT off magnitude image
+- `fa60`: spin-echo image acquired with 60&deg; excitation flip-angle
+- `fa120`: spin-echo image acquired with 120&deg; excitation flip-angle
+- `ref`: reference image used for masking and resampling typically Dixon 
+out-of-phase fat-water magnitude image (TE 3.45 ms at 3 T)
 
 ### t2
 Calculate T2 map from double-echo spin-echo data. By default the maps are
-registered to a reference image. Required source files and arguments:
-- `e1`: First echo NIfTI image
-- `e2`:  Second echo NIfTI image
+registered to a reference image. The source files and arguments required are:
+- `e1`: First echo image
+- `e2`:  Second echo image
 - `te1`: echo time of first echo (ms)
 - `te2`: echo time of second echo (ms)
-- `ref`: reference NIfTI image used for registration typically Dixon 
-out-of-phase fat-water magnitude image (TE 3.45 ms at 3 T)
+- `ref`: reference image used for registration typically Dixon out-of-phase 
+fat-water magnitude image (TE 3.45 ms at 3 T)
 
 ## Options
 
@@ -91,7 +92,7 @@ the full image extent for that dimension) using `fslroi`
 - `-s`: separate images in x-direction during phase unwrapping. This is
 recommended for lower limbs e.g. thighs or calves
 - `-nb`: calculate noise-bias corrected fat-fraction maps - see [Liu et al. MRM 
-2007](https://onlinelibrary.wiley.com/doi/full/10.1002/mrm.21301) for details  
+(2007)](https://onlinelibrary.wiley.com/doi/full/10.1002/mrm.21301) for details  
 
 ### mtr-b1  algorithm
 - `-b1pcf`: population level B1 correction factor. This is the gradient of a 
