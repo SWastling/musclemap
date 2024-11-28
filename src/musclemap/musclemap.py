@@ -258,6 +258,12 @@ def main():
         "FSL", vercheck.get_fsl_ver(fsldir), config.FSL_VERSIONS, args.any_version
     )
 
+    print("* checking version of MRtrix")
+    fsldir = vercheck.get_fsldir()
+    vercheck.check_lib_ver(
+        "MRtrix", vercheck.get_mrtrix_ver(), config.MRTRIX_VERSIONS, args.any_version
+    )
+
     if args.o:
         out_dir = args.o.resolve()
     else:

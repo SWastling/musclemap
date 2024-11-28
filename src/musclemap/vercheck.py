@@ -1,5 +1,6 @@
 import os
 import pathlib
+import subprocess as sp
 import sys
 
 
@@ -42,6 +43,29 @@ def get_fsl_ver(fsldir):
         fslver = "unknown"
 
     return fslver
+
+
+def get_mrtrix_ver():
+    """
+    Determine MRtrix version installed on system
+
+    :return: version of MRtrix
+    :rtype: str
+    """
+
+    try:
+        sp_out = sp.run(['mrinfo', '-version'],
+                        capture_output=True, text=True, check=True)
+    except FileNotFoundError:
+        sys.stderr.write('ERROR: mrinfo (an MRtrix command) used to check '
+                         'version is not in your path, exiting\n')
+        sys.exit(1)
+
+    mrinfo_out = sp_out.stdout.strip()
+    mrinfo_out_first_line = mrinfo_out.splitlines()[0]
+
+    # First line should be of the form == mrinfo 3.0.1-26-g0f28beae ==
+    return mrinfo_out_first_line.split(' ')[2]
 
 
 def check_lib_ver(lib_name, lib_ver, expected_lib_ver_list, any_ver):
