@@ -38,7 +38,7 @@ def main():
     )
 
     parser.add_argument(
-        "-r", help="register images to first " "source file", action="store_true"
+        "-r", help="register images to first source file", action="store_true"
     )
 
     parser.add_argument("-m", help="filename of mask images", metavar="mask")
@@ -59,7 +59,7 @@ def main():
 
     parser.add_argument(
         "-quiet",
-        help="don't display information messages or " "progress status",
+        help="don't display information messages or progress status",
         action="store_true",
     )
 
@@ -117,7 +117,7 @@ def main():
     )
 
     parser_t2 = subparsers.add_parser(
-        "t2", help="calculate T2 map from double-" "echo spin-echo data"
+        "t2", help="calculate T2 map from double-echo spin-echo data"
     )
 
     parser_b1.add_argument(
@@ -125,42 +125,42 @@ def main():
     )
 
     parser_b1.add_argument(
-        "fa120", help="120 degree flip-angle spin-echo " "image", type=pathlib.Path
+        "fa120", help="120 degree flip-angle spin-echo image", type=pathlib.Path
     )
 
     parser_ff.add_argument(
         "m_1",
-        help="out-of-phase fat-water magnitude image" " (e.g. TE 3.45 ms at 3 T)",
+        help="out-of-phase fat-water magnitude image (e.g. TE 3.45 ms at 3 T)",
         type=pathlib.Path,
     )
 
     parser_ff.add_argument(
         "phi_1",
-        help="out-of-phase fat-water phase image " "(e.g. TE 3.45 ms at 3 T)",
+        help="out-of-phase fat-water phase image (e.g. TE 3.45 ms at 3 T)",
         type=pathlib.Path,
     )
 
     parser_ff.add_argument(
         "m0",
-        help="in-phase fat-water magnitude image " "(e.g. TE 4.60 ms at 3 T)",
+        help="in-phase fat-water magnitude image (e.g. TE 4.60 ms at 3 T)",
         type=pathlib.Path,
     )
 
     parser_ff.add_argument(
         "phi0",
-        help="in-phase fat-water phase image " "(e.g. TE 4.60 ms at 3 T)",
+        help="in-phase fat-water phase image (e.g. TE 4.60 ms at 3 T)",
         type=pathlib.Path,
     )
 
     parser_ff.add_argument(
         "m1",
-        help="out-of-phase fat-water magnitude image " "(e.g. TE 5.75 ms at 3 T)",
+        help="out-of-phase fat-water magnitude image (e.g. TE 5.75 ms at 3 T)",
         type=pathlib.Path,
     )
 
     parser_ff.add_argument(
         "phi1",
-        help="out-of-phase fat-water phase image " "(e.g. TE 5.75 ms at 3 T)",
+        help="out-of-phase fat-water phase image (e.g. TE 5.75 ms at 3 T)",
         type=pathlib.Path,
     )
 
@@ -200,13 +200,13 @@ def main():
 
     parser_mtr_b1.add_argument(
         "fa60",
-        help="60 degree flip-angle image (for " "B1 inhomogeneity correction)",
+        help="60 degree flip-angle image (for B1 inhomogeneity correction)",
         type=pathlib.Path,
     )
 
     parser_mtr_b1.add_argument(
         "fa120",
-        help="120 degree flip-angle image (for " "B1 inhomogeneity correction)",
+        help="120 degree flip-angle image (for B1 inhomogeneity correction)",
         type=pathlib.Path,
     )
 
