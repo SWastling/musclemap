@@ -117,8 +117,26 @@ def test_scale_phase_error():
         ),
     ],
 )
-def test_make_complex(mag, phase, expected_output):
-    assert np.allclose(ff.make_complex(mag, phase), expected_output)
+def test_complex_from_mag_ph(mag, phase, expected_output):
+    assert np.allclose(ff.complex_from_mag_ph(mag, phase), expected_output)
+
+
+@pytest.mark.parametrize(
+    "real, imag, expected_output",
+    [
+        (0.0, 0.0, 0.0),
+        (1.0, 0.0, 1.0),
+        (0.0, 1.0, 1j),
+        (1.0, 1.0, 1.0 + 1j),
+        (
+            np.array([-10.0, 5.0]),
+            np.array([8.0, -3.1]),
+            np.array([-10.0 + 8j, 5.0 - 3.1j]),
+        ),
+    ],
+)
+def test_complex_from_re_im(real, imag, expected_output):
+    assert np.allclose(ff.complex_from_re_im(real, imag), expected_output)
 
 
 @pytest.mark.parametrize(

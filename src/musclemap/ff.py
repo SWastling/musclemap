@@ -26,7 +26,7 @@ def scale_phase(phase, scanner):
     return phase * sf
 
 
-def make_complex(mag, phase):
+def complex_from_mag_ph(mag, phase):
     """
     Make a complex number from magnitude and phase
 
@@ -35,6 +35,17 @@ def make_complex(mag, phase):
     :return: complex number
     """
     return mag * np.exp(1j * phase)
+
+
+def complex_from_re_im(real, imag):
+    """
+    Make a complex number from real and imaginary parts
+
+    :param real: real part
+    :param imag: imaginary part
+    :return: complex number
+    """
+    return real + 1j * imag
 
 
 def subtract_phase(c, phase):
@@ -345,9 +356,9 @@ def process_ff(
     if not quiet:
         print("** combining magnitude and phase images to make s-1, s0 and s1")
     # Eq.2-4 from Glover and Schneider 1991
-    sminus1 = make_complex(mminus1, phiminus1_rad)
-    s0 = make_complex(m0, phi0_rad)
-    s1 = make_complex(m1, phi1_rad)
+    sminus1 = complex_from_mag_ph(mminus1, phiminus1_rad)
+    s0 = complex_from_mag_ph(m0, phi0_rad)
+    s1 = complex_from_mag_ph(m1, phi1_rad)
 
     if not quiet:
         print("** calculating s_1prime, s0prime and s1prime by subtracting phi0")
