@@ -352,7 +352,7 @@ def process_ff(
     if not quiet:
         print("** calculating s_1prime, s0prime and s1prime by subtracting phi0")
     sminus1prime = subtract_phase(sminus1, phi0_rad)
-    s0prime = subtract_phase(s0, phi0_rad)
+    s0prime = abs(s0)
     s1prime = subtract_phase(s1, phi0_rad)
 
     if not quiet:
