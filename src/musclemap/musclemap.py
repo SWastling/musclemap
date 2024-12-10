@@ -174,9 +174,7 @@ def main():
 
     parser_ff.add_argument(
         "-s",
-        help="separate images in x-direction during"
-        " phase unwrapping (recommended for "
-        "legs)",
+        help="separately process left- and right-hand sides of image (recommended for legs)",
         action="store_true",
     )
 

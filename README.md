@@ -89,7 +89,7 @@ the full image extent for that dimension) using `fslroi`
 - `--any-version`: don't abort if version checks fail 
 
 ### ff  algorithm
-- `-s`: separate images in x-direction during phase unwrapping. This is
+- `-s`: separately process left- and right-hand sides of image. This is
 recommended for lower limbs e.g. thighs or calves
 - `-nb`: calculate noise-bias corrected fat-fraction maps - see [Liu et al. MRM 
 (2007)](https://onlinelibrary.wiley.com/doi/full/10.1002/mrm.21301) for details  
