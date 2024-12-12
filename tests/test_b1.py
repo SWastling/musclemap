@@ -103,3 +103,26 @@ def test_process_b1(tmp_path):
     b1_fp = b1.process_b1(fp_dict, tmp_path, False)
 
     assert perror(ref_b1_fp, b1_fp) < pthresh
+
+
+def test_process_b1_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "b1"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    fa60_fp = input_dir / "se_fa060.nii.gz"
+    fa120_fp = input_dir / "se_fa120.nii.gz"
+
+    fp_dict = {"fa60_fp": fa60_fp, "fa120_fp": fa120_fp}
+
+    ref_b1_fp = output_dir / "b1.nii.gz"
+
+    b1_fp = b1.process_b1(fp_dict, tmp_path)
+
+    assert perror(ref_b1_fp, b1_fp) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
