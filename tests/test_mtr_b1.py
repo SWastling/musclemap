@@ -247,3 +247,42 @@ def test_process_mtr_b1(tmp_path):
     assert perror(ref_mtr_fp, mtr_fp) < pthresh
     assert perror(ref_mtr_b1pcf_fp, mtr_b1pcf_fp) < pthresh
     assert perror(ref_mtr_b1scf_fp, mtr_b1scf_fp) < pthresh
+
+
+def test_process_mtr_b1_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "mtr-b1"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mt_on_fp = input_dir / "mt_on.nii.gz"
+    mt_off_fp = input_dir / "mt_off.nii.gz"
+
+    fp_dict = {"mt_on_fp": mt_on_fp, "mt_off_fp": mt_off_fp}
+
+    fa60_fp = input_dir / "se_fa060.nii.gz"
+    fa120_fp = input_dir / "se_fa120.nii.gz"
+    res_ref_fp = input_dir / "0006-Dixon_TE_345_th.nii.gz"
+    ref_mtr_fp = output_dir / "mtr.nii.gz"
+    ref_mtr_b1pcf_fp = output_dir / "mtr_b1pcf.nii.gz"
+    ref_mtr_b1scf_fp = output_dir / "mtr_b1scf.nii.gz"
+
+    [mtr_fp, mtr_b1pcf_fp, mtr_b1scf_fp], to_delete = mtr_b1.process_mtr_b1(
+        fp_dict,
+        fa60_fp,
+        fa120_fp,
+        res_ref_fp,
+        tmp_path,
+        [],
+        FSL_DIR,
+        0.0085,
+    )
+
+    assert perror(ref_mtr_fp, mtr_fp) < pthresh
+    assert perror(ref_mtr_b1pcf_fp, mtr_b1pcf_fp) < pthresh
+    assert perror(ref_mtr_b1scf_fp, mtr_b1scf_fp) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
