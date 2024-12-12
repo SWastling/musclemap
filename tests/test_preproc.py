@@ -208,7 +208,7 @@ def test_register(tmp_path):
     assert perror(ref_reg_fp, fp_dict["fa120_fp"]) < pthresh
 
 
-def test_register_quiet(tmp_path):
+def test_register_quiet(tmp_path, capsys):
     pthresh = 1.0
 
     fa60_fp = TEST_DATA_DIR / "b1" / "input" / "se_fa060.nii.gz"
@@ -224,48 +224,9 @@ def test_register_quiet(tmp_path):
     assert to_delete == [fp_dict["fa120_fp"]]
     assert perror(ref_reg_fp, fp_dict["fa120_fp"]) < pthresh
 
-
-def test_register_dixon(tmp_path):
-    pthresh = 1.0
-
-    data_dir = TEST_DATA_DIR / "ff/siemens/hand_reg"
-    input_dir = data_dir / "input"
-    output_dir = data_dir / "output"
-
-    mminus1_fp = input_dir / "0006-Dixon_TE_345_hand.nii.gz"
-    phiminus1_fp = input_dir / "0007-Dixon_TE_345_hand.nii.gz"
-    m0_fp = input_dir / "0008-Dixon_TE_460_hand.nii.gz"
-    phi0_fp = input_dir / "0009-Dixon_TE_460_hand.nii.gz"
-    m1_fp = input_dir / "0010-Dixon_TE_575_hand.nii.gz"
-    phi1_fp = input_dir / "0011-Dixon_TE_575_hand.nii.gz"
-
-    fp_dict = {
-        "mminus1_fp": mminus1_fp,
-        "phiminus1_fp": phiminus1_fp,
-        "m0_fp": m0_fp,
-        "phi0_fp": phi0_fp,
-        "m1_fp": m1_fp,
-        "phi1_fp": phi1_fp,
-    }
-
-    m0_ref_fp = output_dir / "0008-Dixon_TE_460_hand_r.nii.gz"
-    phi0_ref_fp = output_dir / "0009-Dixon_TE_460_hand_r.nii.gz"
-    m1_ref_fp = output_dir / "0010-Dixon_TE_575_hand_r.nii.gz"
-    phi1_ref_fp = output_dir / "0011-Dixon_TE_575_hand_r.nii.gz"
-
-    fp_ref_dict = {
-        "mminus1_fp": mminus1_fp,
-        "phiminus1_fp": phiminus1_fp,
-        "m0_fp": m0_ref_fp,
-        "phi0_fp": phi0_ref_fp,
-        "m1_fp": m1_ref_fp,
-        "phi1_fp": phi1_ref_fp,
-    }
-
-    fp_dict, to_delete = preproc.register_dixon(fp_dict, tmp_path, [], FSL_DIR, False)
-
-    for key in fp_dict:
-        assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
 
 
 def test_register_t2(tmp_path):
@@ -294,6 +255,36 @@ def test_register_t2(tmp_path):
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
 
 
+def test_register_t2_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "t2"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    e1_fp = input_dir / "t2_te16ms.nii.gz"
+    e2_fp = input_dir / "t2_te56ms.nii.gz"
+
+    fp_dict = {"e1_fp": e1_fp, "e2_fp": e2_fp}
+
+    reg_ref_fp = input_dir / "0007-Dixon_TE_345_cf.nii.gz"
+
+    ref_e1_r_fp = output_dir / "t2_te16ms_r.nii.gz"
+    ref_e2_r_fp = output_dir / "t2_te56ms_r.nii.gz"
+    fp_ref_dict = {"e1_fp": ref_e1_r_fp, "e2_fp": ref_e2_r_fp}
+
+    fp_dict, to_delete = preproc.register_t2(
+        fp_dict, reg_ref_fp, tmp_path, [], FSL_DIR
+    )
+
+    for key in fp_dict:
+        assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
 def test_mask(tmp_path):
     pthresh = 1.0
 
@@ -319,7 +310,7 @@ def test_mask(tmp_path):
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
 
 
-def test_mask_quiet(tmp_path):
+def test_mask_quiet(tmp_path, capsys):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / "ff/ge/thigh_masked"
@@ -342,6 +333,10 @@ def test_mask_quiet(tmp_path):
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
 
 
 def test_crop(tmp_path):
@@ -366,6 +361,34 @@ def test_crop(tmp_path):
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+
+
+def test_crop_quiet(tmp_path, capsys):
+    pthresh = 1.0
+    crop_dims = [0, 56, 0, -1, 0, -1]
+
+    data_dir = TEST_DATA_DIR / "b1"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    a_fp = input_dir / "se_fa060.nii.gz"
+    b_fp = input_dir / "se_fa120.nii.gz"
+
+    fp_dict = {"a": a_fp, "b": b_fp}
+
+    a_ref_fp = output_dir / "se_fa060_c.nii.gz"
+    b_ref_fp = output_dir / "se_fa120_c.nii.gz"
+
+    fp_ref_dict = {"a": a_ref_fp, "b": b_ref_fp}
+
+    fp_dict, to_delete = preproc.crop(fp_dict, crop_dims, tmp_path, [], FSL_DIR)
+
+    for key in fp_dict:
+        assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
 
 
 def test_resample(tmp_path):
@@ -395,6 +418,37 @@ def test_resample(tmp_path):
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
 
 
+def test_resample_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "mtr-b1"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mt_on_fp = input_dir / "mt_on.nii.gz"
+    mt_off_fp = input_dir / "mt_off.nii.gz"
+
+    fp_dict = {"mt_on_fp": mt_on_fp, "mt_off_fp": mt_off_fp}
+
+    res_ref_fp = input_dir / "0006-Dixon_TE_345_th.nii.gz"
+
+    ref_mt_on_fp = output_dir / "mt_on_resamp.nii.gz"
+    ref_mt_off_fp = output_dir / "mt_off_resamp.nii.gz"
+
+    fp_ref_dict = {"mt_on_fp": ref_mt_on_fp, "mt_off_fp": ref_mt_off_fp}
+
+    fp_dict, to_delete = preproc.resample(
+        fp_dict, res_ref_fp, tmp_path, [], FSL_DIR
+    )
+
+    for key in fp_dict:
+        assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
 def test_create_mask(tmp_path):
     pthresh = 1.0
 
@@ -411,3 +465,25 @@ def test_create_mask(tmp_path):
     )
 
     assert perror(ref_bgmask_fp, bg_mask_fp) < pthresh
+
+
+def test_create_mask_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "mtr-b1"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    res_ref_fp = input_dir / "0006-Dixon_TE_345_th.nii.gz"
+
+    ref_bgmask_fp = output_dir / "bgmask.nii.gz"
+
+    bg_mask_fp, to_delete = preproc.create_mask(
+        res_ref_fp, tmp_path, [], FSL_DIR
+    )
+
+    assert perror(ref_bgmask_fp, bg_mask_fp) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
