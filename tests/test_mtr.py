@@ -103,3 +103,26 @@ def test_process_mtr(tmp_path):
     mtr_fp = mtr.process_mtr(fp_dict, tmp_path, False)
 
     assert perror(ref_mtr_fp, mtr_fp) < pthresh
+
+
+def test_process_mtr_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "mtr"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mt_on_fp = input_dir / "mt_on.nii.gz"
+    mt_off_fp = input_dir / "mt_off.nii.gz"
+
+    fp_dict = {"mt_on_fp": mt_on_fp, "mt_off_fp": mt_off_fp}
+
+    ref_mtr_fp = output_dir / "mtr.nii.gz"
+
+    mtr_fp = mtr.process_mtr(fp_dict, tmp_path)
+
+    assert perror(ref_mtr_fp, mtr_fp) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
