@@ -142,3 +142,39 @@ def test_process_t2(tmp_path):
 
     assert perror(ref_t2_fp, fp_dict["t2_fp"]) < pthresh
     assert perror(ref_s0_fp, fp_dict["s0_fp"]) < pthresh
+
+
+def test_process_t2_quiet(tmp_path, capsys):
+    # When running on stoney with FSL 6.0.4 the co-registration step of the T2
+    # map production is marginally different, but within a mask the images are
+    # less than 2% different
+    pthresh = 2.0
+
+    data_dir = TEST_DATA_DIR / "t2"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    e1_fp = input_dir / "t2_te16ms.nii.gz"
+    e2_fp = input_dir / "t2_te56ms.nii.gz"
+
+    fp_dict = {"e1_fp": e1_fp, "e2_fp": e2_fp}
+
+    reg_ref_fp = input_dir / "0007-Dixon_TE_345_cf.nii.gz"
+    ref_t2_fp = output_dir / "t2_m.nii.gz"
+    ref_s0_fp = output_dir / "s0_m.nii.gz"
+    mask_fp = output_dir / "mask.nii.gz"
+
+    [t2_fp, s0_fp], to_delete = t2.process_t2(
+        fp_dict, 16.0, 56.0, reg_ref_fp, tmp_path, [], FSL_DIR)
+
+    fp_dict = {"t2_fp": t2_fp, "s0_fp": s0_fp}
+
+    fp_dict, to_delete = preproc.mask(
+        fp_dict, mask_fp, tmp_path, to_delete, FSL_DIR)
+
+    assert perror(ref_t2_fp, fp_dict["t2_fp"]) < pthresh
+    assert perror(ref_s0_fp, fp_dict["s0_fp"]) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
