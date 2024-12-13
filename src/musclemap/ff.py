@@ -248,6 +248,8 @@ def coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet=
         [
             m0_to_mminus1_xform_fp,
             m1_to_mminus1_xform_fp,
+            sminus1_real_fp,
+            sminus1_real_fp,
             s0_real_fp,
             s0_imag_fp,
             s1_real_fp,
