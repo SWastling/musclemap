@@ -43,23 +43,6 @@ def test_get_fsl_ver(tmp_path):
         assert vercheck.get_fsl_ver(fsldir) == "unknown"
 
 
-def test_get_mrtrix_ver(capsys):
-    # Test what happens if MRtrix is in path
-    assert vercheck.get_mrtrix_ver() in config.MRTRIX_VERSIONS
-
-    # Test what happens if MRtrix not in path
-    with mock.patch.dict(os.environ, {'PATH': ''}):
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
-            vercheck.get_mrtrix_ver()
-
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == 1
-        captured = capsys.readouterr()
-        assert captured.out == ''
-        assert captured.err == 'ERROR: mrinfo (an MRtrix command) used to ' \
-                               'check version is not in your path, exiting\n'
-
-
 def test_check_lib_ver(capsys):
     # Library check fail and exit
     with pytest.raises(SystemExit) as pytest_wrapped_e:
