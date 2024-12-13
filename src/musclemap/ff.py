@@ -49,6 +49,19 @@ def complex_from_re_im(real, imag):
 
 
 def coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet=True):
+    """
+    Co-register the three Dixon acquisitions to sminus1 i.e. TE=3.45ms using FSL
+    flirt.
+    :param fp_dict: filenames of in- and out-of-phase NIfTI files
+    :param sminus1: out-of-phase complex image (TE=3.45ms)
+    :param s0: in-phase complex image (TE=4.6ms)
+    :param s1: out-of-phase complex image (TE=5.75ms)
+    :param affine_out: affine transformation to use when saving NIfTI files
+    :param out_dir: output directory filepath
+    :param to_delete: intermediate files to delete
+    :param quiet: don't display information messages or progress status
+    :return: phi0_rad, s0, s1, fp_dict, to_delete
+    """
     if not quiet:
         print(
             "*** calculating affine transformation from %s to %s with flirt"
