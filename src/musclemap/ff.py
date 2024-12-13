@@ -49,31 +49,66 @@ def complex_from_re_im(real, imag):
 
 
 def coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet=True):
-
     if not quiet:
-        print("*** calculating affine transformation from %s to %s with flirt" % (
-            fp_dict["m0_fp"], fp_dict["mminus1_fp"]))
+        print(
+            "*** calculating affine transformation from %s to %s with flirt"
+            % (fp_dict["m0_fp"], fp_dict["mminus1_fp"])
+        )
 
-    m0_to_mminus1_xform_fp = out_dir / 'm0_to_mminus1_xform.txt'
-    m0_r_fp = out_dir / 'm0_r.nii.gz'
-    sp.run(['flirt', '-in', fp_dict["m0_fp"], '-ref', fp_dict["mminus1_fp"], '-out', m0_r_fp, '-omat', m0_to_mminus1_xform_fp], check=True, text=True, capture_output=True)
+    m0_to_mminus1_xform_fp = out_dir / "m0_to_mminus1_xform.txt"
+    m0_r_fp = out_dir / "m0_r.nii.gz"
+    sp.run(
+        [
+            "flirt",
+            "-in",
+            fp_dict["m0_fp"],
+            "-ref",
+            fp_dict["mminus1_fp"],
+            "-out",
+            m0_r_fp,
+            "-omat",
+            m0_to_mminus1_xform_fp,
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
 
     # Update the filepath to the m0 now it's been transformed
     fp_dict["m0_fp"] = m0_r_fp
 
     if not quiet:
-        print("*** calculating affine transformation from %s to %s with flirt" % (
-        fp_dict["m1_fp"], fp_dict["mminus1_fp"]))
+        print(
+            "*** calculating affine transformation from %s to %s with flirt"
+            % (fp_dict["m1_fp"], fp_dict["mminus1_fp"])
+        )
 
-    m1_to_mminus1_xform_fp = out_dir / 'm1_to_mminus1_xform.txt'
-    m1_r_fp = out_dir / 'm1_r.nii.gz'
-    sp.run(['flirt', '-in', fp_dict["m1_fp"], '-ref', fp_dict["mminus1_fp"], '-out', m1_r_fp, '-omat', m1_to_mminus1_xform_fp], check=True, text=True, capture_output=True)
+    m1_to_mminus1_xform_fp = out_dir / "m1_to_mminus1_xform.txt"
+    m1_r_fp = out_dir / "m1_r.nii.gz"
+    sp.run(
+        [
+            "flirt",
+            "-in",
+            fp_dict["m1_fp"],
+            "-ref",
+            fp_dict["mminus1_fp"],
+            "-out",
+            m1_r_fp,
+            "-omat",
+            m1_to_mminus1_xform_fp,
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
 
     # Update the filepath to the m1 now it's been transformed
     fp_dict["m1_fp"] = m1_r_fp
 
     if not quiet:
-        print("*** saving real and imaginary parts of sminus1, s0 and s1 complex NIfTI images")
+        print(
+            "*** saving real and imaginary parts of sminus1, s0 and s1 complex NIfTI images"
+        )
 
     sminus1_real_fp = out_dir / "sminus1_real.nii.gz"
     sminus1_real_nii_obj = nib.nifti1.Nifti1Image(np.real(sminus1), affine_out)
@@ -101,21 +136,84 @@ def coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet=
 
     if not quiet:
         print(
-            "*** applying affine transformation to real and imaginary parts of sminus1, s0 and s1 with flirt")
+            "*** applying affine transformation to real and imaginary parts of sminus1, s0 and s1 with flirt"
+        )
 
     s0_real_r_fp = out_dir / "s0_real_r.nii.gz"
-    sp.run(['flirt', '-in', s0_real_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m0_to_mminus1_xform_fp, '-out', s0_real_r_fp], check=True, text=True, capture_output=True)
+    sp.run(
+        [
+            "flirt",
+            "-in",
+            s0_real_fp,
+            "-ref",
+            fp_dict["mminus1_fp"],
+            "-applyxfm",
+            "-init",
+            m0_to_mminus1_xform_fp,
+            "-out",
+            s0_real_r_fp,
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
 
     s0_imag_r_fp = out_dir / "s0_imag_r.nii.gz"
-    sp.run(['flirt', '-in', s0_imag_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m0_to_mminus1_xform_fp,
-            '-out', s0_imag_r_fp], check=True, text=True, capture_output=True)
+    sp.run(
+        [
+            "flirt",
+            "-in",
+            s0_imag_fp,
+            "-ref",
+            fp_dict["mminus1_fp"],
+            "-applyxfm",
+            "-init",
+            m0_to_mminus1_xform_fp,
+            "-out",
+            s0_imag_r_fp,
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
 
     s1_real_r_fp = out_dir / "s1_real_r.nii.gz"
-    sp.run(['flirt', '-in', s1_real_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m1_to_mminus1_xform_fp, '-out', s1_real_r_fp], check=True, text=True, capture_output=True)
+    sp.run(
+        [
+            "flirt",
+            "-in",
+            s1_real_fp,
+            "-ref",
+            fp_dict["mminus1_fp"],
+            "-applyxfm",
+            "-init",
+            m1_to_mminus1_xform_fp,
+            "-out",
+            s1_real_r_fp,
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
 
     s1_imag_r_fp = out_dir / "s1_imag_r.nii.gz"
-    sp.run(['flirt', '-in', s1_imag_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m1_to_mminus1_xform_fp,
-            '-out', s1_imag_r_fp], check=True, text=True, capture_output=True)
+    sp.run(
+        [
+            "flirt",
+            "-in",
+            s1_imag_fp,
+            "-ref",
+            fp_dict["mminus1_fp"],
+            "-applyxfm",
+            "-init",
+            m1_to_mminus1_xform_fp,
+            "-out",
+            s1_imag_r_fp,
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
 
     if not quiet:
         print("*** loading co-registered images")
@@ -133,7 +231,20 @@ def coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet=
         print("*** calculating phi0 from s0")
     phi0_rad = np.angle(s0)
 
-    to_delete.extend([m0_to_mminus1_xform_fp, m1_to_mminus1_xform_fp, s0_real_fp, s0_imag_fp, s1_real_fp, s1_imag_fp, s0_real_r_fp, s0_imag_r_fp, s1_real_r_fp, s1_imag_r_fp])
+    to_delete.extend(
+        [
+            m0_to_mminus1_xform_fp,
+            m1_to_mminus1_xform_fp,
+            s0_real_fp,
+            s0_imag_fp,
+            s1_real_fp,
+            s1_imag_fp,
+            s0_real_r_fp,
+            s0_imag_r_fp,
+            s1_real_r_fp,
+            s1_imag_r_fp,
+        ]
+    )
 
     return phi0_rad, s0, s1, fp_dict, to_delete
 
@@ -454,8 +565,12 @@ def process_ff(
 
     if coreg:
         if not quiet:
-            print("** performing registration to correct for subject motion between echoes")
-        phi0_rad, s0, s1, fp_dict, to_delete = coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet)
+            print(
+                "** performing registration to correct for subject motion between echoes"
+            )
+        phi0_rad, s0, s1, fp_dict, to_delete = coreg_dixon(
+            fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet
+        )
 
     if not quiet:
         print("** calculating s_1prime, s0prime and s1prime by subtracting phi0")

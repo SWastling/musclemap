@@ -187,7 +187,16 @@ def test_musclemap_b1_reg_quiet(tmp_path, script_runner):
     ref_b1_fp = output_dir / "b1_r.nii.gz"
 
     result = script_runner.run(
-        [SCRIPT_NAME, "-quiet", "-r", "-o", str(tmp_path), "b1", str(fa60_fp), str(fa120_fp)]
+        [
+            SCRIPT_NAME,
+            "-quiet",
+            "-r",
+            "-o",
+            str(tmp_path),
+            "b1",
+            str(fa60_fp),
+            str(fa120_fp),
+        ]
     )
     assert result.success
 

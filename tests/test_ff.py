@@ -217,6 +217,7 @@ def test_unwrap_quiet(tmp_path, capsys):
     assert captured.out == ""
     assert captured.err == ""
 
+
 @pytest.mark.parametrize(
     "test_phim_uw, test_s, expected_output",
     [
@@ -520,4 +521,3 @@ def test_process_ff_coreg_quiet(tmp_path, capsys):
     captured = capsys.readouterr()
     assert captured.out == ""
     assert captured.err == ""
-

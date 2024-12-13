@@ -358,7 +358,6 @@ def main():
         fp_dict, to_delete = preproc.unscale(fp_dict, out_dir, to_delete)
 
     if args.r:
-
         if args.algorithm != "ff":
             if not args.quiet:
                 print("** registering images to %s with fsl flirt" % ref_fp)

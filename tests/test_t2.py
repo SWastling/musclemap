@@ -165,12 +165,12 @@ def test_process_t2_quiet(tmp_path, capsys):
     mask_fp = output_dir / "mask.nii.gz"
 
     [t2_fp, s0_fp], to_delete = t2.process_t2(
-        fp_dict, 16.0, 56.0, reg_ref_fp, tmp_path, [], FSL_DIR)
+        fp_dict, 16.0, 56.0, reg_ref_fp, tmp_path, [], FSL_DIR
+    )
 
     fp_dict = {"t2_fp": t2_fp, "s0_fp": s0_fp}
 
-    fp_dict, to_delete = preproc.mask(
-        fp_dict, mask_fp, tmp_path, to_delete, FSL_DIR)
+    fp_dict, to_delete = preproc.mask(fp_dict, mask_fp, tmp_path, to_delete, FSL_DIR)
 
     assert perror(ref_t2_fp, fp_dict["t2_fp"]) < pthresh
     assert perror(ref_s0_fp, fp_dict["s0_fp"]) < pthresh

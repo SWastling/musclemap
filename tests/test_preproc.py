@@ -273,9 +273,7 @@ def test_register_t2_quiet(tmp_path, capsys):
     ref_e2_r_fp = output_dir / "t2_te56ms_r.nii.gz"
     fp_ref_dict = {"e1_fp": ref_e1_r_fp, "e2_fp": ref_e2_r_fp}
 
-    fp_dict, to_delete = preproc.register_t2(
-        fp_dict, reg_ref_fp, tmp_path, [], FSL_DIR
-    )
+    fp_dict, to_delete = preproc.register_t2(fp_dict, reg_ref_fp, tmp_path, [], FSL_DIR)
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
@@ -437,9 +435,7 @@ def test_resample_quiet(tmp_path, capsys):
 
     fp_ref_dict = {"mt_on_fp": ref_mt_on_fp, "mt_off_fp": ref_mt_off_fp}
 
-    fp_dict, to_delete = preproc.resample(
-        fp_dict, res_ref_fp, tmp_path, [], FSL_DIR
-    )
+    fp_dict, to_delete = preproc.resample(fp_dict, res_ref_fp, tmp_path, [], FSL_DIR)
 
     for key in fp_dict:
         assert perror(fp_ref_dict[key], fp_dict[key]) < pthresh
@@ -478,9 +474,7 @@ def test_create_mask_quiet(tmp_path, capsys):
 
     ref_bgmask_fp = output_dir / "bgmask.nii.gz"
 
-    bg_mask_fp, to_delete = preproc.create_mask(
-        res_ref_fp, tmp_path, [], FSL_DIR
-    )
+    bg_mask_fp, to_delete = preproc.create_mask(res_ref_fp, tmp_path, [], FSL_DIR)
 
     assert perror(ref_bgmask_fp, bg_mask_fp) < pthresh
 
