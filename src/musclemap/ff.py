@@ -48,6 +48,96 @@ def complex_from_re_im(real, imag):
     return real + 1j * imag
 
 
+def coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet=True):
+
+    if not quiet:
+        print("*** calculating affine transformation from %s to %s with flirt" % (
+            fp_dict["m0_fp"], fp_dict["mminus1_fp"]))
+
+    m0_to_mminus1_xform_fp = out_dir / 'm0_to_mminus1_xform.txt'
+    m0_r_fp = out_dir / 'm0_r.nii.gz'
+    sp.run(['flirt', '-in', fp_dict["m0_fp"], '-ref', fp_dict["mminus1_fp"], '-out', m0_r_fp, '-omat', m0_to_mminus1_xform_fp], check=True, text=True, capture_output=True)
+
+    # Update the filepath to the m0 now it's been transformed
+    fp_dict["m0_fp"] = m0_r_fp
+
+    if not quiet:
+        print("*** calculating affine transformation from %s to %s with flirt" % (
+        fp_dict["m1_fp"], fp_dict["mminus1_fp"]))
+
+    m1_to_mminus1_xform_fp = out_dir / 'm1_to_mminus1_xform.txt'
+    m1_r_fp = out_dir / 'm1_r.nii.gz'
+    sp.run(['flirt', '-in', fp_dict["m1_fp"], '-ref', fp_dict["mminus1_fp"], '-out', m1_r_fp, '-omat', m1_to_mminus1_xform_fp], check=True, text=True, capture_output=True)
+
+    # Update the filepath to the m1 now it's been transformed
+    fp_dict["m1_fp"] = m1_r_fp
+
+    if not quiet:
+        print("*** saving real and imaginary parts of sminus1, s0 and s1 complex NIfTI images")
+
+    sminus1_real_fp = out_dir / "sminus1_real.nii.gz"
+    sminus1_real_nii_obj = nib.nifti1.Nifti1Image(np.real(sminus1), affine_out)
+    sminus1_real_nii_obj.to_filename(str(sminus1_real_fp))
+
+    sminus1_imag_fp = out_dir / "sminus1_imag.nii.gz"
+    sminus1_imag_nii_obj = nib.nifti1.Nifti1Image(np.imag(sminus1), affine_out)
+    sminus1_imag_nii_obj.to_filename(str(sminus1_imag_fp))
+
+    s0_real_fp = out_dir / "s0_real.nii.gz"
+    s0_real_nii_obj = nib.nifti1.Nifti1Image(np.real(s0), affine_out)
+    s0_real_nii_obj.to_filename(str(s0_real_fp))
+
+    s0_imag_fp = out_dir / "s0_imag.nii.gz"
+    s0_imag_nii_obj = nib.nifti1.Nifti1Image(np.imag(s0), affine_out)
+    s0_imag_nii_obj.to_filename(str(s0_imag_fp))
+
+    s1_real_fp = out_dir / "s1_real.nii.gz"
+    s1_real_nii_obj = nib.nifti1.Nifti1Image(np.real(s1), affine_out)
+    s1_real_nii_obj.to_filename(str(s1_real_fp))
+
+    s1_imag_fp = out_dir / "s1_imag.nii.gz"
+    s1_imag_nii_obj = nib.nifti1.Nifti1Image(np.imag(s1), affine_out)
+    s1_imag_nii_obj.to_filename(str(s1_imag_fp))
+
+    if not quiet:
+        print(
+            "*** applying affine transformation to real and imaginary parts of sminus1, s0 and s1 with flirt")
+
+    s0_real_r_fp = out_dir / "s0_real_r.nii.gz"
+    sp.run(['flirt', '-in', s0_real_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m0_to_mminus1_xform_fp, '-out', s0_real_r_fp], check=True, text=True, capture_output=True)
+
+    s0_imag_r_fp = out_dir / "s0_imag_r.nii.gz"
+    sp.run(['flirt', '-in', s0_imag_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m0_to_mminus1_xform_fp,
+            '-out', s0_imag_r_fp], check=True, text=True, capture_output=True)
+
+    s1_real_r_fp = out_dir / "s1_real_r.nii.gz"
+    sp.run(['flirt', '-in', s1_real_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m1_to_mminus1_xform_fp, '-out', s1_real_r_fp], check=True, text=True, capture_output=True)
+
+    s1_imag_r_fp = out_dir / "s1_imag_r.nii.gz"
+    sp.run(['flirt', '-in', s1_imag_fp, '-ref', fp_dict["mminus1_fp"], '-applyxfm', '-init', m1_to_mminus1_xform_fp,
+            '-out', s1_imag_r_fp], check=True, text=True, capture_output=True)
+
+    if not quiet:
+        print("*** loading co-registered images")
+    s0_real = nib.load(str(s0_real_r_fp)).get_fdata()
+    s0_imag = nib.load(str(s0_imag_r_fp)).get_fdata()
+    s1_real = nib.load(str(s1_real_r_fp)).get_fdata()
+    s1_imag = nib.load(str(s1_imag_r_fp)).get_fdata()
+
+    if not quiet:
+        print("*** combining real and imaginary images to make s0 and s1")
+    s0 = complex_from_re_im(s0_real, s0_imag)
+    s1 = complex_from_re_im(s1_real, s1_imag)
+
+    if not quiet:
+        print("*** calculating phi0 from s0")
+    phi0_rad = np.angle(s0)
+
+    to_delete.extend([m0_to_mminus1_xform_fp, m1_to_mminus1_xform_fp, s0_real_fp, s0_imag_fp, s1_real_fp, s1_imag_fp, s0_real_r_fp, s0_imag_r_fp, s1_real_r_fp, s1_imag_r_fp])
+
+    return phi0_rad, s0, s1, fp_dict, to_delete
+
+
 def subtract_phase(c, phase):
     """
     Subtract phase from a complex number
@@ -302,7 +392,7 @@ def calc_ff_nb(sminus1prime, s0prime, s1prime, p):
 
 
 def process_ff(
-    fp_dict, out_dir, to_delete, fsldir, noise_bias, scanner, split, quiet=True
+    fp_dict, out_dir, to_delete, fsldir, noise_bias, scanner, split, coreg, quiet=True
 ):
     """
     Calculate fat-fraction map from 3 point Dixon data
@@ -321,6 +411,8 @@ def process_ff(
     :type scanner: str
     :param split: split image in left-right direction
     :type split: bool
+    :param coreg: non-linear warp to first echo
+    :type coreg: bool
     :param quiet: don't display information messages or progress status
     :type quiet: bool
     :return: ff_fp, to_delete: fat-fraction filepath(s) and intermediate
@@ -359,6 +451,11 @@ def process_ff(
     sminus1 = complex_from_mag_ph(mminus1, phiminus1_rad)
     s0 = complex_from_mag_ph(m0, phi0_rad)
     s1 = complex_from_mag_ph(m1, phi1_rad)
+
+    if coreg:
+        if not quiet:
+            print("** performing registration to correct for subject motion between echoes")
+        phi0_rad, s0, s1, fp_dict, to_delete = coreg_dixon(fp_dict, sminus1, s0, s1, affine_out, out_dir, to_delete, quiet)
 
     if not quiet:
         print("** calculating s_1prime, s0prime and s1prime by subtracting phi0")

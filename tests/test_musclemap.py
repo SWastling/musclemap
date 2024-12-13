@@ -174,6 +174,28 @@ def test_musclemap_b1_reg(tmp_path, script_runner):
     assert perror(ref_b1_fp, b1_fp) < pthresh
 
 
+def test_musclemap_b1_reg_quiet(tmp_path, script_runner):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "b1"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    fa60_fp = input_dir / "se_fa060.nii.gz"
+    fa120_fp = input_dir / "se_fa120.nii.gz"
+
+    ref_b1_fp = output_dir / "b1_r.nii.gz"
+
+    result = script_runner.run(
+        [SCRIPT_NAME, "-quiet", "-r", "-o", str(tmp_path), "b1", str(fa60_fp), str(fa120_fp)]
+    )
+    assert result.success
+
+    b1_fp = tmp_path / "b1.nii.gz"
+
+    assert perror(ref_b1_fp, b1_fp) < pthresh
+
+
 def test_musclemap_b1_mask(tmp_path, script_runner):
     pthresh = 1.0
 
@@ -358,7 +380,7 @@ def test_musclemap_ff_thigh(tmp_path, script_runner):
     assert perror(ref_w_fp, w_fp) < pthresh
 
 
-def test_musclemap_ff_hand_reg(tmp_path, script_runner):
+def test_musclemap_ff_hand_reg_quiet(tmp_path, script_runner):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / "ff/siemens/hand_reg"

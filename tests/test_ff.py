@@ -193,6 +193,30 @@ def test_unwrap(tmp_path):
     assert perror(ref_phim_uw_fp, phim_uw_fp) < pthresh
 
 
+def test_unwrap_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/siemens/thigh"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    ref_phim_uw_fp = output_dir / "phim_uw.nii.gz"
+
+    phim_fp = output_dir / "phim.nii.gz"
+    phim_shape = nib.load(str(phim_fp)).header.get_data_shape()
+
+    m0_fp = input_dir / "0008-Dixon_TE_460_th.nii.gz"
+
+    phim_uw_fp, to_delete = ff.unwrap(
+        phim_fp, phim_shape, m0_fp, tmp_path, [], True, FSL_DIR, True
+    )
+
+    assert perror(ref_phim_uw_fp, phim_uw_fp) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
 @pytest.mark.parametrize(
     "test_phim_uw, test_s, expected_output",
     [
@@ -326,13 +350,13 @@ def test_process_ff(tmp_path):
     ref_ff_fp = output_dir / "fatfraction.nii.gz"
 
     ff_fp, to_delete = ff.process_ff(
-        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", True, False
+        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", True, False, False
     )
 
     assert perror(ref_ff_fp, ff_fp) < pthresh
 
 
-def test_process_ff_nb_quiet(tmp_path):
+def test_process_ff_nb(tmp_path):
     pthresh = 1.0
 
     data_dir = TEST_DATA_DIR / "ff/siemens/thigh"
@@ -355,10 +379,145 @@ def test_process_ff_nb_quiet(tmp_path):
         "phi1_fp": phi1_fp,
     }
 
-    ref_ff_fp = output_dir / "fatfraction.nii.gz"
+    ref_ff_fp = output_dir / "fatfraction_nb.nii.gz"
 
-    ff_fp, to_delete = ff.process_ff(
-        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", True
+    ff_fps, to_delete = ff.process_ff(
+        fp_dict, tmp_path, [], FSL_DIR, True, "siemens", True, False, False
     )
 
+    assert perror(ref_ff_fp, ff_fps[1]) < pthresh
+
+
+def test_process_ff_nb_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/siemens/thigh"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mminus1_fp = input_dir / "0006-Dixon_TE_345_th.nii.gz"
+    phiminus1_fp = input_dir / "0007-Dixon_TE_345_th.nii.gz"
+    m0_fp = input_dir / "0008-Dixon_TE_460_th.nii.gz"
+    phi0_fp = input_dir / "0009-Dixon_TE_460_th.nii.gz"
+    m1_fp = input_dir / "0010-Dixon_TE_575_th.nii.gz"
+    phi1_fp = input_dir / "0011-Dixon_TE_575_th.nii.gz"
+
+    fp_dict = {
+        "mminus1_fp": mminus1_fp,
+        "phiminus1_fp": phiminus1_fp,
+        "m0_fp": m0_fp,
+        "phi0_fp": phi0_fp,
+        "m1_fp": m1_fp,
+        "phi1_fp": phi1_fp,
+    }
+
+    ref_ff_fp = output_dir / "fatfraction_nb.nii.gz"
+
+    ff_fps, to_delete = ff.process_ff(
+        fp_dict, tmp_path, [], FSL_DIR, True, "siemens", True, False, True
+    )
+
+    assert perror(ref_ff_fp, ff_fps[1]) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
+def test_process_ff_coreg(tmp_path):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/siemens/hand_reg"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mminus1_fp = input_dir / "0006-Dixon_TE_345_hand.nii.gz"
+    phiminus1_fp = input_dir / "0007-Dixon_TE_345_hand.nii.gz"
+    m0_fp = input_dir / "0008-Dixon_TE_460_hand.nii.gz"
+    phi0_fp = input_dir / "0009-Dixon_TE_460_hand.nii.gz"
+    m1_fp = input_dir / "0010-Dixon_TE_575_hand.nii.gz"
+    phi1_fp = input_dir / "0011-Dixon_TE_575_hand.nii.gz"
+
+    fp_dict = {
+        "mminus1_fp": mminus1_fp,
+        "phiminus1_fp": phiminus1_fp,
+        "m0_fp": m0_fp,
+        "phi0_fp": phi0_fp,
+        "m1_fp": m1_fp,
+        "phi1_fp": phi1_fp,
+    }
+
+    ff_fp, to_delete = ff.process_ff(
+        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", False, True, False
+    )
+
+    m0_r_fp = tmp_path / "m0_r.nii.gz"
+    ref_m0_r_fp = output_dir / "m0_r.nii.gz"
+    assert perror(ref_m0_r_fp, m0_r_fp) < pthresh
+
+    m1_r_fp = tmp_path / "m1_r.nii.gz"
+    ref_m1_r_fp = output_dir / "m1_r.nii.gz"
+    assert perror(ref_m1_r_fp, m1_r_fp) < pthresh
+
+    fat_fp = tmp_path / "fat.nii.gz"
+    ref_fat_fp = output_dir / "fat.nii.gz"
+    assert perror(ref_fat_fp, fat_fp) < pthresh
+
+    water_fp = tmp_path / "water.nii.gz"
+    ref_water_fp = output_dir / "water.nii.gz"
+    assert perror(ref_water_fp, water_fp) < pthresh
+
+    ref_ff_fp = output_dir / "fatfraction.nii.gz"
     assert perror(ref_ff_fp, ff_fp) < pthresh
+
+
+def test_process_ff_coreg_quiet(tmp_path, capsys):
+    pthresh = 1.0
+
+    data_dir = TEST_DATA_DIR / "ff/siemens/hand_reg"
+    input_dir = data_dir / "input"
+    output_dir = data_dir / "output"
+
+    mminus1_fp = input_dir / "0006-Dixon_TE_345_hand.nii.gz"
+    phiminus1_fp = input_dir / "0007-Dixon_TE_345_hand.nii.gz"
+    m0_fp = input_dir / "0008-Dixon_TE_460_hand.nii.gz"
+    phi0_fp = input_dir / "0009-Dixon_TE_460_hand.nii.gz"
+    m1_fp = input_dir / "0010-Dixon_TE_575_hand.nii.gz"
+    phi1_fp = input_dir / "0011-Dixon_TE_575_hand.nii.gz"
+
+    fp_dict = {
+        "mminus1_fp": mminus1_fp,
+        "phiminus1_fp": phiminus1_fp,
+        "m0_fp": m0_fp,
+        "phi0_fp": phi0_fp,
+        "m1_fp": m1_fp,
+        "phi1_fp": phi1_fp,
+    }
+
+    ff_fp, to_delete = ff.process_ff(
+        fp_dict, tmp_path, [], FSL_DIR, False, "siemens", False, True, True
+    )
+
+    m0_r_fp = tmp_path / "m0_r.nii.gz"
+    ref_m0_r_fp = output_dir / "m0_r.nii.gz"
+    assert perror(ref_m0_r_fp, m0_r_fp) < pthresh
+
+    m1_r_fp = tmp_path / "m1_r.nii.gz"
+    ref_m1_r_fp = output_dir / "m1_r.nii.gz"
+    assert perror(ref_m1_r_fp, m1_r_fp) < pthresh
+
+    fat_fp = tmp_path / "fat.nii.gz"
+    ref_fat_fp = output_dir / "fat.nii.gz"
+    assert perror(ref_fat_fp, fat_fp) < pthresh
+
+    water_fp = tmp_path / "water.nii.gz"
+    ref_water_fp = output_dir / "water.nii.gz"
+    assert perror(ref_water_fp, water_fp) < pthresh
+
+    ref_ff_fp = output_dir / "fatfraction.nii.gz"
+    assert perror(ref_ff_fp, ff_fp) < pthresh
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+

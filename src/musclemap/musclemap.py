@@ -256,12 +256,6 @@ def main():
         "FSL", vercheck.get_fsl_ver(fsldir), config.FSL_VERSIONS, args.any_version
     )
 
-    print("* checking version of MRtrix")
-    fsldir = vercheck.get_fsldir()
-    vercheck.check_lib_ver(
-        "MRtrix", vercheck.get_mrtrix_ver(), config.MRTRIX_VERSIONS, args.any_version
-    )
-
     if args.o:
         out_dir = args.o.resolve()
     else:
@@ -364,17 +358,15 @@ def main():
         fp_dict, to_delete = preproc.unscale(fp_dict, out_dir, to_delete)
 
     if args.r:
-        if not args.quiet:
-            print("** registering images to %s with fsl flirt" % ref_fp)
-        if args.algorithm == "ff":
-            fp_dict, to_delete = preproc.register_dixon(
-                fp_dict, out_dir, to_delete, fsldir, args.quiet
-            )
-        else:
+
+        if args.algorithm != "ff":
+            if not args.quiet:
+                print("** registering images to %s with fsl flirt" % ref_fp)
+
             fp_dict, to_delete = preproc.register(
                 fp_dict, ref_fp, out_dir, to_delete, fsldir, args.quiet
             )
-
+        # co-registration for ff algorithm is performed within ff.py
     if args.m:
         if not args.quiet:
             print("** masking with fslmaths")
@@ -410,6 +402,7 @@ def main():
             args.nb,
             args.scanner,
             args.s,
+            args.r,
             args.quiet,
         )
     elif args.algorithm == "mtr":
