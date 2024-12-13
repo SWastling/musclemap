@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [release-1.2.1](https://github.com/SWastling/musclemap/releases/tag/1.2.0) - 2024-12-13
+## [release-1.2.2](https://github.com/SWastling/musclemap/releases/tag/1.2.2) - 2024-12-13
+
+### Changed
+
+- Fix typo in coreg_dixon() function in ff.py
+
+## [release-1.2.1](https://github.com/SWastling/musclemap/releases/tag/1.2.1) - 2024-12-13
 
 ### Changed
 
