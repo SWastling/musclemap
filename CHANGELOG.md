@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [release-1.2.0](https://github.com/SWastling/musclemap/tree/release-1.2.0) - 2024-12-13
+
+### Changed
+
+- Updated tests to improve coverage of individual functions
+- Previously registration of Dixon images was achieved by calculating the rigid
+transformation of magnitude images to one another and then applying the 
+transformation to the phase images. This resulted in two problems
+  - mis-registrations as shown by the green arrow in the image below
+  - phase discontinuity artefacts as shown by the red arrow in the image below
+- Now using affine transformations applied to real and imaginary images to 
+resolve both issues. 
+
+![](ff_nl_warp_re_im.png)
+
 ## [release-1.1.1](https://github.com/SWastling/musclemap/tree/release-1.1.1) - 2024-11-27
 
 ### Changed
