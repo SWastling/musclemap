@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [release-1.2.1](https://github.com/SWastling/musclemap/releases/tag/1.2.0) - 2024-12-13
+
+### Changed
+
+- Corrected list of intermediate files to delete in coreg_dixon() function in ff.py
+
 ## [release-1.2.0](https://github.com/SWastling/musclemap/tree/release-1.2.0) - 2024-12-13
 
 ### Changed
