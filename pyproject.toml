@@ -1,6 +1,6 @@
 [project]
 name = "musclemap"
-version = "1.2.2"
+version = "1.2.3"
 description = "Calculate B1, fat-fraction, magnetisation transfer ratio or T2 maps"
 readme = "README.md"
 authors = [
