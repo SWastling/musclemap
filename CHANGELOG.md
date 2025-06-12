@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3](https://github.com/SWastling/musclemap/tree/1.2.4) - 2025-06-12
+
+### Changed
+
+- Relax tolerance for equality of elements of transformation matrices to 1E-4 in check_shape_and_orientation() function 
+
 ## [release-1.2.2](https://github.com/SWastling/musclemap/releases/tag/1.2.2) - 2024-12-13
 
 ### Changed
