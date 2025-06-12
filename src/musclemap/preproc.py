@@ -43,7 +43,7 @@ def check_shape_and_orientation(fp_dict, ref_fp):
             check_affine = check_obj.header.get_best_affine()
             check_shape = check_obj.header.get_data_shape()
             if not (
-                np.allclose(ref_affine, check_affine) and (ref_shape == check_shape)
+                np.allclose(ref_affine, check_affine, atol=1E-4) and (ref_shape == check_shape)
             ):
                 sys.stderr.write("ERROR: %s mismatched geometry\n" % str(fp))
                 sys.exit(1)
