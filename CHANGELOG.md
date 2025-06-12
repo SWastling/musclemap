@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.3](https://github.com/SWastling/musclemap/tree/1.2.4) - 2025-06-12
+## [1.2.4](https://github.com/SWastling/musclemap/tree/1.2.4) - 2025-06-12
+
+### Changed
+
+- Fix typo in CHANGELOG.md
+
+## [1.2.3](https://github.com/SWastling/musclemap/tree/1.2.3) - 2025-06-12
 
 ### Changed
 
